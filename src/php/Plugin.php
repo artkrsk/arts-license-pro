@@ -119,27 +119,65 @@ class Plugin {
 	/**
 	 * Render license panel
 	 *
-	 * @return void
+	 * @param array $args   Panel configuration
+	 * @param bool  $return Whether to return HTML instead of outputting
+	 * @return string|void HTML if $return is true, otherwise outputs directly
 	 */
-	public function render_license_panel(): void {
+	public function render_license_panel( array $args = array(), bool $return = false ) {
 		$root_id = $this->config['product_slug'] . '-license-panel';
-		?>
-<div id="<?php echo esc_attr( $root_id ); ?>"></div>
-<?php
+		$classes = array( 'arts-license-pro-license-panel-mount' );
+
+		// Add custom classes if provided
+		if ( ! empty( $args['class'] ) ) {
+			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
+			$classes = array_merge( $classes, $custom_classes );
+		}
+
+		$html = sprintf(
+			'<div id="%s" class="%s" data-product="%s"></div>',
+			esc_attr( $root_id ),
+			esc_attr( implode( ' ', $classes ) ),
+			esc_attr( $this->config['product_slug'] )
+		);
+
+		if ( $return ) {
+			return $html;
+		}
+
+		echo $html;
 	}
 
 	/**
 	 * Render pro feature badge
 	 *
-	 * @param array $args Badge configuration
-	 * @return void
+	 * @param array $args   Badge configuration
+	 * @param bool  $return Whether to return HTML instead of outputting
+	 * @return string|void HTML if $return is true, otherwise outputs directly
 	 */
-	public function render_pro_badge( array $args = array() ): void {
+	public function render_pro_badge( array $args = array(), bool $return = false ) {
 		static $badge_counter = 0;
 		$badge_id             = $this->config['product_slug'] . '-pro-badge-' . ( ++$badge_counter );
-		?>
-<span id="<?php echo esc_attr( $badge_id ); ?>" data-config="<?php echo esc_attr( wp_json_encode( $args ) ); ?>"></span>
-<?php
+		$classes = array( 'arts-license-pro-badge-mount' );
+
+		// Add custom classes if provided
+		if ( ! empty( $args['class'] ) ) {
+			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
+			$classes = array_merge( $classes, $custom_classes );
+		}
+
+		$html = sprintf(
+			'<span id="%s" class="%s" data-product="%s" data-config="%s"></span>',
+			esc_attr( $badge_id ),
+			esc_attr( implode( ' ', $classes ) ),
+			esc_attr( $this->config['product_slug'] ),
+			esc_attr( wp_json_encode( $args ) )
+		);
+
+		if ( $return ) {
+			return $html;
+		}
+
+		echo $html;
 	}
 
 	/**

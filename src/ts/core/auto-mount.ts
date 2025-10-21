@@ -12,10 +12,10 @@ export function autoMountComponents(): void {
   }
 
   // Mount license panels
-  const licensePanels = document.querySelectorAll('[id$="-license-panel"]')
+  const licensePanels = document.querySelectorAll('.arts-license-pro-license-panel-mount')
   licensePanels.forEach((element) => {
-    const productSlug = element.id.replace('-license-panel', '')
-    const instanceData = window.artsLicenseProInstances![productSlug]
+    const productSlug = element.getAttribute('data-product')
+    const instanceData = window.artsLicenseProInstances![productSlug!]
 
     if (!instanceData) {
       console.warn(`No instance data found for product: ${productSlug}`)
@@ -39,7 +39,7 @@ export function autoMountComponents(): void {
   })
 
   // Mount pro badges
-  const proBadges = document.querySelectorAll('[id$="-pro-badge-"]')
+  const proBadges = document.querySelectorAll('.arts-license-pro-badge-mount')
   proBadges.forEach((element) => {
     const configData = element.getAttribute('data-config')
     if (!configData) return

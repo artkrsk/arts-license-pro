@@ -23,7 +23,7 @@ export default function (baseConfig) {
   config.liveReload.reloadOnRestart = true
 
   config.wordpress.targets = [
-    '/Users/art/Projects/EDD Github Storage/vendor/arts-license-pro/src/php'
+    '/Users/art/Projects/EDD Github Storage/vendor/arts/license-pro/src/php'
   ]
 
   // Configure WordPress plugin target
