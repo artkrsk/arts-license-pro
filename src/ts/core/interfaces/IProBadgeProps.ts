@@ -14,4 +14,6 @@ export interface IProBadgeProps {
   text?: string
   /** Badge status for styling */
   status?: 'default' | 'success' | 'warning'
+  /** Open link in new window */
+  openInNewWindow?: boolean
 }

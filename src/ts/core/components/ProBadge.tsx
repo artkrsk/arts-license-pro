@@ -10,7 +10,8 @@ export const ProBadge = ({
   renderAsLink = true,
   href,
   text,
-  status = 'default'
+  status = 'default',
+  openInNewWindow = true
 }: IProBadgeProps): JSX.Element => {
   const badgeText = text || __('Get Pro', 'arts-license-pro')
 
@@ -19,7 +20,11 @@ export const ProBadge = ({
   const badgeClassName = `arts-license-pro-badge${statusClass}`
 
   const badge = renderAsLink ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={badgeClassName}>
+    <a
+      href={href}
+      className={badgeClassName}
+      {...(openInNewWindow && { target: '_blank', rel: 'noopener noreferrer' })}
+    >
       {badgeText}
     </a>
   ) : (
