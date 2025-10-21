@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Arts\LicensePro\Includes\Manager;
+use Arts\LicensePro\Includes\Updates;
 
 /**
  * Plugin
@@ -22,6 +23,13 @@ class Plugin {
 	 * @var Manager
 	 */
 	private Manager $manager;
+
+	/**
+	 * Updates manager instance
+	 *
+	 * @var Updates|null
+	 */
+	private ?Updates $updates = null;
 
 	/**
 	 * Configuration
@@ -55,6 +63,8 @@ class Plugin {
 				'renew_support_url' => '',
 				'plugin_file'       => '',
 				'update_uri'        => '',
+				'icons'             => array(),
+				'banners'           => array(),
 			)
 		);
 
@@ -65,6 +75,12 @@ class Plugin {
 
 		/** Initialize license manager */
 		$this->manager = new Manager( $this->config );
+
+		/** Initialize updates manager if plugin_file provided */
+		if ( ! empty( $this->config['plugin_file'] ) ) {
+			$this->updates = new Updates( $this->config, $this->manager );
+			$this->updates->init();
+		}
 	}
 
 	/**
