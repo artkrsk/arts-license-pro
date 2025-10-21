@@ -2,6 +2,9 @@
 
 namespace Arts\LicensePro\Includes;
 
+use Arts\LicensePro\Includes\Exceptions\LicenseValidationException;
+use Arts\LicensePro\Includes\Exceptions\LicenseServerException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -70,7 +73,7 @@ class API {
 		$license_key = $this->storage->get_key();
 
 		if ( ! $license_key ) {
-			throw new \Exception( __( 'No license key found', 'arts-license-pro' ) );
+			throw new LicenseValidationException( __( 'No license key found', 'arts-license-pro' ) );
 		}
 
 		/** Try to deactivate via API (don't throw on failure) */
@@ -176,7 +179,7 @@ class API {
 
 		/** Handle errors */
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( $response->get_error_message() );
+			throw new LicenseServerException( $response->get_error_message() );
 		}
 
 		/** Parse response */
@@ -184,13 +187,13 @@ class API {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) ) {
-			throw new \Exception( __( 'Invalid API response', 'arts-license-pro' ) );
+			throw new LicenseServerException( __( 'Invalid API response', 'arts-license-pro' ) );
 		}
 
 		/** Check for API-level errors */
 		if ( isset( $data['success'] ) && ! $data['success'] ) {
 			$message = $data['message'] ?? __( 'License activation failed', 'arts-license-pro' );
-			throw new \Exception( $message );
+			throw new LicenseValidationException( $message );
 		}
 
 		return $data;

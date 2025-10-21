@@ -2,6 +2,9 @@
 
 namespace Arts\LicensePro\Includes;
 
+use Arts\LicensePro\Includes\Exceptions\LicenseValidationException;
+use Arts\LicensePro\Includes\Exceptions\LicenseServerException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -76,7 +79,9 @@ class AJAX {
 			$result['license_key'] = $license_key;
 
 			wp_send_json_success( $result );
-		} catch ( \Exception $e ) {
+		} catch ( LicenseValidationException $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ), 400 );
+		} catch ( LicenseServerException $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ), 500 );
 		}
 	}
@@ -96,7 +101,9 @@ class AJAX {
 		try {
 			$this->manager->get_api()->deactivate();
 			wp_send_json_success( array() );
-		} catch ( \Exception $e ) {
+		} catch ( LicenseValidationException $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ), 400 );
+		} catch ( LicenseServerException $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ), 500 );
 		}
 	}
@@ -119,9 +126,11 @@ class AJAX {
 			if ( $result ) {
 				wp_send_json_success( $result );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'No license found', 'arts-license-pro' ) ) );
+				wp_send_json_error( array( 'message' => __( 'No license found', 'arts-license-pro' ) ), 400 );
 			}
-		} catch ( \Exception $e ) {
+		} catch ( LicenseValidationException $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ), 400 );
+		} catch ( LicenseServerException $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ), 500 );
 		}
 	}
