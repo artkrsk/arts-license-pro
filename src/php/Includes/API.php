@@ -43,9 +43,6 @@ class API implements APIInterface {
 
 	/**
 	 * Activate license
-	 *
-	 * @param string $license_key License key to activate
-	 * @return array|\WP_Error API response with license data or WP_Error on failure
 	 */
 	public function activate( string $license_key ) {
 		$result = $this->call_api( 'activate', $license_key );
@@ -68,8 +65,6 @@ class API implements APIInterface {
 
 	/**
 	 * Deactivate license
-	 *
-	 * @return array|\WP_Error Empty array on success or WP_Error on failure
 	 */
 	public function deactivate() {
 		$license_key = $this->storage->get_key();
@@ -96,8 +91,6 @@ class API implements APIInterface {
 
 	/**
 	 * Check license status
-	 *
-	 * @return array|\WP_Error|null License data, WP_Error on failure, or null if no license
 	 */
 	public function check() {
 		/** Get stored license key */

@@ -34,8 +34,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Get stored license key
-	 *
-	 * @return string|null
 	 */
 	public function get_key(): ?string {
 		$key = get_option( $this->option_prefix . '_key' );
@@ -44,9 +42,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Store license key
-	 *
-	 * @param string $key License key
-	 * @return void
 	 */
 	public function set_key( string $key ): void {
 		update_option( $this->option_prefix . '_key', $key );
@@ -54,8 +49,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Delete stored license key
-	 *
-	 * @return void
 	 */
 	public function delete_key(): void {
 		delete_option( $this->option_prefix . '_key' );
@@ -63,8 +56,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Get all license data as array
-	 *
-	 * @return array|null
 	 */
 	public function get_data(): ?array {
 		$key = $this->get_key();
@@ -86,9 +77,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Store license data from API response
-	 *
-	 * @param array $data License data from API
-	 * @return void
 	 */
 	public function set_data( array $data ): void {
 		/** Remove license_key from data since it's stored separately */
@@ -99,8 +87,6 @@ class Storage implements StorageInterface {
 
 	/**
 	 * Delete all license data
-	 *
-	 * @return void
 	 */
 	public function delete_data(): void {
 		$this->delete_key();

@@ -78,8 +78,6 @@ class Manager implements ManagerInterface {
 
 	/**
 	 * Check if license is valid
-	 *
-	 * @return bool True if license is valid
 	 */
 	public function is_valid(): bool {
 		if ( $this->init_error || ! $this->storage ) {
@@ -102,8 +100,6 @@ class Manager implements ManagerInterface {
 
 	/**
 	 * Get license status data
-	 *
-	 * @return array|null License data or null if no license
 	 */
 	public function get_status(): ?array {
 		if ( $this->init_error || ! $this->storage ) {
@@ -115,9 +111,6 @@ class Manager implements ManagerInterface {
 
 	/**
 	 * Get API instance
-	 *
-	 * @return APIInterface
-	 * @throws \RuntimeException If manager not properly initialized
 	 */
 	public function get_api(): APIInterface {
 		if ( ! $this->api ) {
@@ -128,9 +121,6 @@ class Manager implements ManagerInterface {
 
 	/**
 	 * Get storage instance
-	 *
-	 * @return StorageInterface
-	 * @throws \RuntimeException If manager not properly initialized
 	 */
 	public function get_storage(): StorageInterface {
 		if ( ! $this->storage ) {
@@ -141,8 +131,6 @@ class Manager implements ManagerInterface {
 
 	/**
 	 * Get initialization errors if any
-	 *
-	 * @return \WP_Error|null
 	 */
 	public function get_errors() {
 		return $this->init_error;
