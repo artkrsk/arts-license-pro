@@ -65,7 +65,7 @@ class Frontend {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		/** Add this instance's data to the global filter */
-		add_filter( 'arts_license_pro_instances_data', array( $this, 'add_instance_data' ) );
+		add_filter( 'arts/license-pro/instances_data', array( $this, 'add_instance_data' ) );
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Frontend {
 			wp_localize_script(
 				'arts-license-pro-admin',
 				'artsLicenseProInstances',
-				apply_filters( 'arts_license_pro_instances_data', array() )
+				apply_filters( 'arts/license-pro/instances_data', array() )
 			);
 		}
 
@@ -138,4 +138,3 @@ class Frontend {
 		return $instances;
 	}
 }
-
