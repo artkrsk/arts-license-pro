@@ -2,6 +2,10 @@
 
 namespace Arts\LicensePro\Includes;
 
+use Arts\LicensePro\Includes\Interfaces\ManagerInterface;
+use Arts\LicensePro\Includes\Interfaces\APIInterface;
+use Arts\LicensePro\Includes\Interfaces\StorageInterface;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -11,21 +15,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Main class providing license management functionality.
  */
-class Manager {
+class Manager implements ManagerInterface {
 
 	/**
 	 * API instance
 	 *
-	 * @var API
+	 * @var APIInterface|null
 	 */
-	private API $api;
+	private ?APIInterface $api = null;
 
 	/**
 	 * Storage instance
 	 *
-	 * @var Storage
+	 * @var StorageInterface|null
 	 */
-	private Storage $storage;
+	private ?StorageInterface $storage = null;
 
 	/**
 	 * Configuration
@@ -35,11 +39,20 @@ class Manager {
 	private array $config;
 
 	/**
+	 * Initialization error if any
+	 *
+	 * @var \WP_Error|null
+	 */
+	private $init_error = null;
+
+	/**
 	 * Constructor
 	 *
-	 * @param array $config Configuration array
+	 * @param array                 $config  Configuration array
+	 * @param StorageInterface|null $storage Storage implementation (optional)
+	 * @param APIInterface|null     $api     API implementation (optional)
 	 */
-	public function __construct( array $config ) {
+	public function __construct( array $config, ?StorageInterface $storage = null, ?APIInterface $api = null ) {
 		$this->config = wp_parse_args(
 			$config,
 			array(
@@ -51,12 +64,16 @@ class Manager {
 
 		/** Validate required config */
 		if ( empty( $this->config['product_slug'] ) ) {
-			wp_die( 'License Manager requires product_slug configuration.' );
+			$this->init_error = new \WP_Error(
+				'invalid_config',
+				__( 'License Manager requires product_slug configuration.', 'arts-license-pro' )
+			);
+			return;
 		}
 
-		/** Initialize storage and API */
-		$this->storage = new Storage( $this->config['product_slug'] );
-		$this->api     = new API( $this->config, $this->storage );
+		/** Initialize storage and API (use injected or create new) */
+		$this->storage = $storage ?? new Storage( $this->config['product_slug'] );
+		$this->api     = $api ?? new API( $this->config, $this->storage );
 	}
 
 	/**
@@ -65,6 +82,10 @@ class Manager {
 	 * @return bool True if license is valid
 	 */
 	public function is_valid(): bool {
+		if ( $this->init_error || ! $this->storage ) {
+			return false;
+		}
+
 		$data = $this->storage->get_data();
 
 		if ( ! $data ) {
@@ -85,24 +106,45 @@ class Manager {
 	 * @return array|null License data or null if no license
 	 */
 	public function get_status(): ?array {
+		if ( $this->init_error || ! $this->storage ) {
+			return null;
+		}
+
 		return $this->storage->get_data();
 	}
 
 	/**
 	 * Get API instance
 	 *
-	 * @return API
+	 * @return APIInterface
+	 * @throws \RuntimeException If manager not properly initialized
 	 */
-	public function get_api(): API {
+	public function get_api(): APIInterface {
+		if ( ! $this->api ) {
+			throw new \RuntimeException( 'Manager not properly initialized. Check get_errors() for details.' );
+		}
 		return $this->api;
 	}
 
 	/**
 	 * Get storage instance
 	 *
-	 * @return Storage
+	 * @return StorageInterface
+	 * @throws \RuntimeException If manager not properly initialized
 	 */
-	public function get_storage(): Storage {
+	public function get_storage(): StorageInterface {
+		if ( ! $this->storage ) {
+			throw new \RuntimeException( 'Manager not properly initialized. Check get_errors() for details.' );
+		}
 		return $this->storage;
+	}
+
+	/**
+	 * Get initialization errors if any
+	 *
+	 * @return \WP_Error|null
+	 */
+	public function get_errors() {
+		return $this->init_error;
 	}
 }

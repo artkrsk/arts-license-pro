@@ -23,9 +23,9 @@ class Plugin {
 	/**
 	 * License manager instance
 	 *
-	 * @var Manager
+	 * @var Manager|null
 	 */
-	private Manager $manager;
+	private ?Manager $manager = null;
 
 	/**
 	 * Updates manager instance
@@ -37,16 +37,16 @@ class Plugin {
 	/**
 	 * Frontend manager instance
 	 *
-	 * @var Frontend
+	 * @var Frontend|null
 	 */
-	private Frontend $frontend;
+	private ?Frontend $frontend = null;
 
 	/**
 	 * AJAX manager instance
 	 *
-	 * @var AJAX
+	 * @var AJAX|null
 	 */
-	private AJAX $ajax;
+	private ?AJAX $ajax = null;
 
 	/**
 	 * Configuration
@@ -54,6 +54,13 @@ class Plugin {
 	 * @var array
 	 */
 	private array $config;
+
+	/**
+	 * Initialization error if any
+	 *
+	 * @var \WP_Error|null
+	 */
+	private $init_error = null;
 
 	/**
 	 * Constructor
@@ -89,11 +96,21 @@ class Plugin {
 
 		/** Validate required config */
 		if ( empty( $this->config['product_slug'] ) ) {
-			wp_die( 'Arts License Pro requires product_slug configuration.' );
+			$this->init_error = new \WP_Error(
+				'invalid_config',
+				__( 'Arts License Pro requires product_slug configuration.', 'arts-license-pro' )
+			);
+			return;
 		}
 
 		/** Initialize license manager */
 		$this->manager = new Manager( $this->config );
+
+		/** Check for manager initialization errors */
+		if ( $this->manager->get_errors() ) {
+			$this->init_error = $this->manager->get_errors();
+			return;
+		}
 
 		/** Initialize updates manager if plugin_file or theme_slug provided */
 		if ( ! empty( $this->config['plugin_file'] ) ) {
@@ -119,6 +136,10 @@ class Plugin {
 	 * @return bool True if license is valid
 	 */
 	public function is_license_active(): bool {
+		if ( $this->init_error || ! $this->manager ) {
+			return false;
+		}
+
 		return $this->manager->is_valid();
 	}
 
@@ -136,7 +157,7 @@ class Plugin {
 		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
 			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
-			$classes = array_merge( $classes, $custom_classes );
+			$classes        = array_merge( $classes, $custom_classes );
 		}
 
 		$html = sprintf(
@@ -163,12 +184,12 @@ class Plugin {
 	public function render_pro_badge( array $args = array(), bool $return = false ) {
 		static $badge_counter = 0;
 		$badge_id             = $this->config['product_slug'] . '-pro-badge-' . ( ++$badge_counter );
-		$classes = array( 'arts-license-pro-badge-root' );
+		$classes              = array( 'arts-license-pro-badge-root' );
 
 		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
 			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
-			$classes = array_merge( $classes, $custom_classes );
+			$classes        = array_merge( $classes, $custom_classes );
 		}
 
 		$html = sprintf(
@@ -190,8 +211,21 @@ class Plugin {
 	 * Get license manager instance
 	 *
 	 * @return Manager
+	 * @throws \RuntimeException If plugin not properly initialized
 	 */
 	public function get_manager(): Manager {
+		if ( ! $this->manager ) {
+			throw new \RuntimeException( 'Plugin not properly initialized. Check get_errors() for details.' );
+		}
 		return $this->manager;
+	}
+
+	/**
+	 * Get initialization errors if any
+	 *
+	 * @return \WP_Error|null
+	 */
+	public function get_errors() {
+		return $this->init_error;
 	}
 }
