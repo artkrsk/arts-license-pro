@@ -116,8 +116,10 @@ export function LicenseForm({
           onClick={isRefreshing ? undefined : handleRefreshClick}
           title={isRefreshing ? '' : __('Click to refresh', 'arts-license-pro')}
         >
-          <span className="arts-license-pro-status-badge__icon">✓</span>
-          <span className="arts-license-pro-status-badge__text">{statusText}</span>
+          <span className="arts-license-pro-status-badge__icon">{isRefreshing ? '⟳' : '✓'}</span>
+          <span className="arts-license-pro-status-badge__text">
+            {isRefreshing ? __('Checking license...', 'arts-license-pro') : statusText}
+          </span>
         </div>
       </li>
     )
