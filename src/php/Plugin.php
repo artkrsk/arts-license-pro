@@ -1,0 +1,113 @@
+<?php
+
+namespace Arts\LicensePro;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+use Arts\LicensePro\Includes\Manager;
+
+/**
+ * Plugin
+ *
+ * Main entry point for Arts License Pro library.
+ * Provides license management and plugin update functionality.
+ */
+class Plugin {
+
+	/**
+	 * License manager instance
+	 *
+	 * @var Manager
+	 */
+	private Manager $manager;
+
+	/**
+	 * Configuration
+	 *
+	 * @var array
+	 */
+	private array $config;
+
+	/**
+	 * Constructor
+	 *
+	 * @param array $config Configuration array with keys:
+	 *                      - product_slug: Product identifier (required)
+	 *                      - product_type: 'plugin' or 'theme' (default: 'plugin')
+	 *                      - api_base_url: Base URL for REST API (required)
+	 *                      - purchase_url: URL to purchase license (optional)
+	 *                      - support_url: URL for support (optional)
+	 *                      - renew_support_url: URL to renew support (optional)
+	 *                      - plugin_file: Main plugin file path (optional, for updates)
+	 *                      - update_uri: Update URI for plugin header (optional)
+	 */
+	public function __construct( array $config ) {
+		$this->config = wp_parse_args(
+			$config,
+			array(
+				'product_slug'      => '',
+				'product_type'      => 'plugin',
+				'api_base_url'      => '',
+				'purchase_url'      => '',
+				'support_url'       => '',
+				'renew_support_url' => '',
+				'plugin_file'       => '',
+				'update_uri'        => '',
+			)
+		);
+
+		/** Validate required config */
+		if ( empty( $this->config['product_slug'] ) || empty( $this->config['api_base_url'] ) ) {
+			wp_die( 'Arts License Pro requires product_slug and api_base_url configuration.' );
+		}
+
+		/** Initialize license manager */
+		$this->manager = new Manager( $this->config );
+	}
+
+	/**
+	 * Check if license is active
+	 *
+	 * @return bool True if license is valid
+	 */
+	public function is_license_active(): bool {
+		return $this->manager->is_valid();
+	}
+
+	/**
+	 * Render license panel
+	 *
+	 * @return void
+	 */
+	public function render_license_panel(): void {
+		$root_id = $this->config['product_slug'] . '-license-panel';
+		?>
+<div id="<?php echo esc_attr( $root_id ); ?>"></div>
+<?php
+	}
+
+	/**
+	 * Render pro feature badge
+	 *
+	 * @param array $args Badge configuration
+	 * @return void
+	 */
+	public function render_pro_badge( array $args = array() ): void {
+		static $badge_counter = 0;
+		$badge_id             = $this->config['product_slug'] . '-pro-badge-' . ( ++$badge_counter );
+		?>
+<span id="<?php echo esc_attr( $badge_id ); ?>" data-config="<?php echo esc_attr( wp_json_encode( $args ) ); ?>"></span>
+<?php
+	}
+
+	/**
+	 * Get license manager instance
+	 *
+	 * @return Manager
+	 */
+	public function get_manager(): Manager {
+		return $this->manager;
+	}
+}
