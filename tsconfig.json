@@ -35,7 +35,7 @@
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
-  "include": ["src/ts/**/*.ts"],
+  "include": ["src/ts/**/*.ts", "src/ts/**/*.tsx"],
   "exclude": [
     "src/wordpress/**/*",
     "node_modules/**/*",

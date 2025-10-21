@@ -20,6 +20,8 @@ declare global {
 			}
 		>
 	}
+
+	const wp: Window['wp']
 }
 
 export {}
