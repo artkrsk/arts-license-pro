@@ -65,6 +65,7 @@ export function LicenseForm({
         window.location.reload()
       }
     } catch (err) {
+      setShowingError(true)
       /** Error handled by parent */
     }
   }
@@ -81,6 +82,7 @@ export function LicenseForm({
         window.location.reload()
       }
     } catch (err) {
+      setShowingError(true)
       /** Error handled by parent */
     }
   }
