@@ -6,11 +6,16 @@ import { LicenseAPIAdapter } from './api/LicenseAPIAdapter'
 
 /** Auto-mount license panels and pro badges on page load */
 export function autoMountComponents(): void {
+	// Check if artsLicenseProInstances exists
+	if (!window.artsLicenseProInstances) {
+		return
+	}
+
 	// Mount license panels
 	const licensePanels = document.querySelectorAll('[id$="-license-panel"]')
 	licensePanels.forEach((element) => {
 		const productSlug = element.id.replace('-license-panel', '')
-		const instanceData = window.artsLicenseProInstances[productSlug]
+		const instanceData = window.artsLicenseProInstances![productSlug]
 		
 		if (!instanceData) {
 			console.warn(`No instance data found for product: ${productSlug}`)
