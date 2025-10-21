@@ -71,8 +71,11 @@ class ThemeUpdates {
 		add_filter( 'pre_set_site_transient_update_themes', array( $this, 'modify_theme_update_transient' ) );
 		add_filter( 'delete_site_transient_update_themes', array( $this, 'delete_theme_update_transient' ) );
 
-		/** Clear cache when license status changes */
-		add_action( 'update_option_' . $this->config['product_slug'] . '_license_status', array( $this, 'clear_update_cache' ) );
+		/** Clear cache when license data or key changes */
+		add_action( 'update_option_' . $this->config['product_slug'] . '_license_data', array( $this, 'clear_update_cache' ) );
+		add_action( 'update_option_' . $this->config['product_slug'] . '_license_key', array( $this, 'clear_update_cache' ) );
+		add_action( 'delete_option_' . $this->config['product_slug'] . '_license_data', array( $this, 'clear_update_cache' ) );
+		add_action( 'delete_option_' . $this->config['product_slug'] . '_license_key', array( $this, 'clear_update_cache' ) );
 
 		/** Clear cache on update screens and after upgrades */
 		add_action( 'load-update-core.php', array( $this, 'delete_theme_update_transient' ) );
@@ -114,7 +117,7 @@ class ThemeUpdates {
 					'url'         => esc_url( $theme_remote_update_data->url ?? '' ),
 				);
 			} else {
-				$item = array(
+				$item                                      = array(
 					'theme'        => $this->theme_slug,
 					'new_version'  => $theme_version,
 					'url'          => '',

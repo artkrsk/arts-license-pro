@@ -75,8 +75,12 @@ class PluginUpdates {
 		/** Check for updates using the Update URI */
 		add_filter( 'update_plugins_' . $this->config['update_uri'], array( $this, 'check_update' ), 99, 4 );
 
-		/** Clear cache when license status changes */
-		add_action( 'update_option_' . $this->config['product_slug'] . '_license_status', array( $this, 'clear_update_cache' ) );
+		/** Clear cache when license data or key changes */
+		add_action( 'update_option_' . $this->config['product_slug'] . '_license_data', array( $this, 'clear_update_cache' ) );
+		add_action( 'update_option_' . $this->config['product_slug'] . '_license_key', array( $this, 'clear_update_cache' ) );
+		add_action( 'delete_option_' . $this->config['product_slug'] . '_license_data', array( $this, 'clear_update_cache' ) );
+		add_action( 'delete_option_' . $this->config['product_slug'] . '_license_key', array( $this, 'clear_update_cache' ) );
+
 		add_action( "in_plugin_update_message-{$this->plugin_id}", array( $this, 'modify_update_message' ), 10, 2 );
 	}
 
@@ -185,7 +189,20 @@ class PluginUpdates {
 	 * @return object|\WP_Error Remote plugin data or WP_Error on failure
 	 */
 	private function fetch_remote_data() {
-		return $this->manager->get_api()->fetch_update_info();
+		$cache_key = $this->plugin_slug . '_update_data';
+		$cached    = get_transient( $cache_key );
+
+		if ( $cached && ! is_wp_error( $cached ) ) {
+			return $cached;
+		}
+
+		$data = $this->manager->get_api()->fetch_update_info();
+
+		if ( ! is_wp_error( $data ) ) {
+			set_transient( $cache_key, $data, HOUR_IN_SECONDS );
+		}
+
+		return $data;
 	}
 
 	/**
@@ -194,6 +211,7 @@ class PluginUpdates {
 	 * @return void
 	 */
 	public function clear_update_cache(): void {
+		delete_transient( $this->plugin_slug . '_update_data' );
 		wp_clean_plugins_cache( true );
 	}
 
