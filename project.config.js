@@ -145,8 +145,6 @@ export default {
     target: 'es2018',
     sourcemap: false,
     externals: {
-      'react': 'React',
-      'react-dom': 'ReactDOM',
       '@wordpress/element': 'wp.element',
       '@wordpress/components': 'wp.components',
       '@wordpress/i18n': 'wp.i18n',
@@ -154,8 +152,6 @@ export default {
       '@wordpress/api-fetch': 'wp.apiFetch'
     },
     globals: {
-      'react': 'React',
-      'react-dom': 'ReactDOM',
       '@wordpress/element': 'wp.element',
       '@wordpress/components': 'wp.components',
       '@wordpress/i18n': 'wp.i18n',
@@ -167,8 +163,6 @@ export default {
       name: 'ArtsLicensePro',
       exports: 'named',
       globals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
         '@wordpress/element': 'wp.element',
         '@wordpress/components': 'wp.components',
         '@wordpress/i18n': 'wp.i18n',
