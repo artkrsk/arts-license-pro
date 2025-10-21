@@ -2,9 +2,9 @@ import { autoMountComponents } from './core/auto-mount'
 
 /** Initialize on DOM ready */
 if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', autoMountComponents)
+  document.addEventListener('DOMContentLoaded', autoMountComponents)
 } else {
-	autoMountComponents()
+  autoMountComponents()
 }
 
 /** Export components for programmatic use */
