@@ -131,6 +131,37 @@ export function LicenseForm({
 			)
 		}
 
+		/** Support - show as list item with inline badge */
+		if (license.date_supported_until) {
+			const dateString = license.date_supported_until.split(' ')[0] || license.date_supported_until
+			const supportDate = new Date(dateString)
+			const today = new Date()
+			today.setHours(0, 0, 0, 0)
+			const isExpired = supportDate < today
+
+			const formattedDate = dateI18n('M d, Y', dateString)
+			const supportStatus = isExpired ? 'warning' : 'success'
+			const supportUrl = isExpired ? licenseConfig.renewSupportUrl : licenseConfig.supportUrl
+			const supportText = isExpired ? __('Renew Support', 'arts-license-pro') : __('Get Support', 'arts-license-pro')
+
+			if (isExpired) {
+				listItems.push(
+					<li key="support" className="arts-license-pro-error">
+						<span className="arts-license-pro-error__icon">✕</span>
+						{__('Support Expired Since', 'arts-license-pro')} {formattedDate}{' '}
+						<ProBadge showWrapper={false} renderAsLink={true} href={supportUrl} text={supportText} status={supportStatus} />
+					</li>
+				)
+			} else {
+				listItems.push(
+					<li key="support">
+						✓ {__('Supported Until', 'arts-license-pro')} {formattedDate}{' '}
+						<ProBadge showWrapper={false} renderAsLink={true} href={supportUrl} text={supportText} status={supportStatus} />
+					</li>
+				)
+			}
+		}
+
 		/** Updates - show lifetime or expiration date */
 		if (license.date_updates_provided_until) {
 			if (license.date_updates_provided_until === 'lifetime') {
@@ -187,33 +218,10 @@ export function LicenseForm({
 			}
 		}
 
-		/** Support badge */
-		let supportBadgeElement = null
-		if (license.date_supported_until) {
-			const dateString = license.date_supported_until.split(' ')[0] || license.date_supported_until
-			const supportDate = new Date(dateString)
-			const today = new Date()
-			today.setHours(0, 0, 0, 0)
-			const isExpired = supportDate < today
-
-			const formattedDate = dateI18n('M d, Y', dateString)
-
-			const supportStatus = isExpired ? 'warning' : 'success'
-			const supportUrl = isExpired ? licenseConfig.renewSupportUrl : licenseConfig.supportUrl
-			const supportText = isExpired
-				? __('Renew Support. Expired on', 'arts-license-pro') + ' ' + formattedDate
-				: __('Get Support Till', 'arts-license-pro') + ' ' + formattedDate
-
-			supportBadgeElement = (
-				<ProBadge showWrapper={false} renderAsLink={true} href={supportUrl} text={supportText} status={supportStatus} />
-			)
-		}
-
-		/** Render with flex container (list on left, badge on right) */
+		/** Render license info list */
 		helpContent = (
 			<div className="arts-license-pro-info">
 				<ul className="arts-license-pro-info__list">{listItems}</ul>
-				{supportBadgeElement}
 			</div>
 		)
 	} else {
