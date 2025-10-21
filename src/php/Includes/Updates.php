@@ -78,6 +78,7 @@ class Updates {
 
 		/** Clear cache when license status changes */
 		add_action( 'update_option_' . $this->config['product_slug'] . '_license_status', array( $this, 'clear_update_cache' ) );
+		add_action( "in_plugin_update_message-{$this->plugin_id}", array( $this, 'modify_update_message' ), 10, 2 );
 	}
 
 	/**
@@ -232,6 +233,46 @@ class Updates {
 	 */
 	public function clear_update_cache(): void {
 		wp_clean_plugins_cache( true );
+	}
+
+	/**
+	 * Modify the update notification row message when package URL is missing.
+	 *
+	 * Displays a link to purchase the plugin when updates are unavailable due to
+	 * invalid or missing license.
+	 *
+	 * @param array $plugin_data Plugin row update data.
+	 * @param array $response    Response array from WordPress.
+	 * @return void
+	 */
+	public function modify_update_message( $plugin_data, $response ): void {
+		$no_package      = ! isset( $plugin_data['package'] ) || empty( $plugin_data['package'] );
+		$new_version     = $plugin_data['new_version'] ?? '';
+		$current_version = $plugin_data['Version'] ?? '';
+
+		if ( ! $no_package ) {
+			return;
+		}
+
+		// Only show when an update exists.
+		if ( version_compare( $current_version, $new_version, '>=' ) ) {
+			return;
+		}
+
+		$purchase_url = $this->config['purchase_url'] ?? '';
+
+		if ( empty( $purchase_url ) ) {
+			return;
+		}
+
+		$message = sprintf(
+			/* translators: 1: opening <a> tag 2: closing </a> tag */
+			__( 'Automatic update is unavailable. %1$sPurchase a license%2$s to enable updates.', 'arts-license-pro' ),
+			'<a href="' . esc_url( $purchase_url ) . '" target="_blank" rel="noopener noreferrer">',
+			'</a>'
+		);
+
+		echo '<br>' . wp_kses_post( $message );
 	}
 }
 
