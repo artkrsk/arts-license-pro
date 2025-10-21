@@ -144,13 +144,37 @@ export default {
     formats: ['esm', 'iife'],
     target: 'es2018',
     sourcemap: false,
-    externals: {},
-    globals: {},
+    externals: {
+      'react': 'React',
+      'react-dom': 'ReactDOM',
+      '@wordpress/element': 'wp.element',
+      '@wordpress/components': 'wp.components',
+      '@wordpress/i18n': 'wp.i18n',
+      '@wordpress/date': 'wp.date',
+      '@wordpress/api-fetch': 'wp.apiFetch'
+    },
+    globals: {
+      'react': 'React',
+      'react-dom': 'ReactDOM',
+      '@wordpress/element': 'wp.element',
+      '@wordpress/components': 'wp.components',
+      '@wordpress/i18n': 'wp.i18n',
+      '@wordpress/date': 'wp.date',
+      '@wordpress/api-fetch': 'wp.apiFetch'
+    },
     cleanOutputDir: true,
     umd: {
       name: 'ArtsLicensePro',
       exports: 'named',
-      globals: {}
+      globals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        '@wordpress/element': 'wp.element',
+        '@wordpress/components': 'wp.components',
+        '@wordpress/i18n': 'wp.i18n',
+        '@wordpress/date': 'wp.date',
+        '@wordpress/api-fetch': 'wp.apiFetch'
+      }
     },
     // Output filenames by format
     output: {
