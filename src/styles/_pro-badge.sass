@@ -1,0 +1,48 @@
+// =============================================================================
+// Pro Badge Component
+// =============================================================================
+
+.arts-license-pro-badge-wrapper
+  display: inline-flex
+  align-items: center
+  gap: $arts-gap-small
+
+  &__label
+    font-weight: $arts-font-weight-medium
+    color: $arts-default-text
+
+.arts-license-pro-badge
+  display: inline-block
+  padding: $arts-gap-small $arts-gap-medium
+  border-radius: $arts-border-radius
+  font-size: $arts-font-size-small
+  font-weight: $arts-font-weight-medium
+  text-decoration: none
+  transition: $arts-transition
+
+  // Default styling
+  background-color: $arts-default-bg
+  color: $arts-default-text
+  border: 1px solid $arts-default-border
+
+  &:hover
+    background-color: $arts-default-hover
+    color: $arts-default-text
+    text-decoration: none
+
+  // Status modifiers
+  &_success
+    background-color: $arts-success-bg
+    color: $arts-success-text
+    border-color: $arts-success-border
+
+    &:hover
+      background-color: $arts-success-hover
+
+  &_warning
+    background-color: $arts-warning-bg
+    color: $arts-warning-text
+    border-color: $arts-warning-border
+
+    &:hover
+      background-color: $arts-warning-hover

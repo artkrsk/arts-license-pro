@@ -1,0 +1,59 @@
+// =============================================================================
+// Utilities & WordPress Admin Integration
+// =============================================================================
+
+// WordPress Admin Integration
+.wp-admin
+  .arts-license-pro-license-panel
+    margin: 20px 0
+
+    .components-panel__body
+      margin: 0
+
+    .components-base-control
+      margin-bottom: 0
+
+// Error States
+.arts-license-pro-error
+  display: inline-flex
+  align-items: center
+  gap: $arts-gap-small
+  color: $arts-error
+  font-size: $arts-font-size-medium
+  font-weight: $arts-font-weight-medium
+
+.arts-license-pro-status-badge
+  display: inline-flex
+  align-items: center
+  gap: $arts-gap-small
+  padding: 2px 6px
+  border-radius: $arts-border-radius-small
+  font-size: $arts-font-size-small
+  font-weight: $arts-font-weight-medium
+
+  &__icon
+    font-size: 12px
+
+    &.dashicons-yes
+      color: $arts-success-text
+
+    &.dashicons-warning
+      color: $arts-warning-text
+
+    &.dashicons-no
+      color: $arts-error
+
+// Responsive Design
+@media (max-width: 782px)
+  .arts-license-pro-license-panel
+    .components-button
+      width: 100%
+      margin-right: 0
+      margin-bottom: 8px
+
+  .arts-license-pro-license-info__actions
+    flex-direction: column
+
+  .arts-license-pro-license-info__action
+    justify-content: center
+    text-align: center
