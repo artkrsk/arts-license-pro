@@ -11,7 +11,7 @@ export const ProBadge = ({
   href,
   text,
   status = 'default'
-}: IProBadgeProps) => {
+}: IProBadgeProps): JSX.Element => {
   const badgeText = text || __('Get Pro', 'arts-license-pro')
 
   /** Determine CSS class based on status */
