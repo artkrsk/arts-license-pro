@@ -25,25 +25,31 @@
   font-weight: $arts-font-weight-medium
 
 .arts-license-pro-status-badge
-  display: inline-flex
-  align-items: center
-  gap: $arts-gap-small
-  padding: 2px 6px
-  border-radius: $arts-border-radius-small
-  font-size: $arts-font-size-small
-  font-weight: $arts-font-weight-medium
+  display: inline-block
+  color: $arts-badge-success-hover
+
+  &_valid
+    color: $arts-badge-success-hover
+
+  &_clickable
+    cursor: pointer
+
+    .arts-license-pro-status-badge__text
+      border-bottom: 1px solid transparent
+      transition: border-color 0.2s
+
+    &:hover .arts-license-pro-status-badge__text
+      border-bottom-color: currentColor
+
+  &_refreshing
+    cursor: default
+    opacity: 0.6
 
   &__icon
-    font-size: 12px
+    margin-right: 4px
 
-    &.dashicons-yes
-      color: $arts-success-text
-
-    &.dashicons-warning
-      color: $arts-warning-text
-
-    &.dashicons-no
-      color: $arts-error
+  &__text
+    display: inline
 
 // Responsive Design
 @media (max-width: 782px)

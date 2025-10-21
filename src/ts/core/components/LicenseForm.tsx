@@ -257,44 +257,46 @@ export function LicenseForm({
 
   return (
     <div className="arts-license-pro-form">
-      <TextControl
-        value={licenseKey}
-        onChange={(value: string) => {
-          setLicenseKey(value)
-          setValidationError(null)
-          setShowingError(false)
-        }}
-        onKeyDown={(e: React.KeyboardEvent) => {
-          if (e.key === 'Enter' && !isActivated && licenseKey.trim()) {
-            e.preventDefault()
-            handleActivateClick()
-          }
-        }}
-        placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
-        help={helpContent}
-        className={validationError || (showingError && apiError) ? 'has-error' : ''}
-        disabled={isLoading || isRefreshing || isActivated}
-        readOnly={isActivated}
-      />
-      <Button
-        variant={isActivated ? 'secondary' : 'primary'}
-        type="button"
-        onClick={isActivated ? handleDeactivateClick : handleActivateClick}
-        isBusy={isLoading || isRefreshing}
-        disabled={isLoading || isRefreshing || (!isActivated && !licenseKey.trim())}
-        isDestructive={isActivated && !isRefreshing}
-        className="arts-license-pro-form__button"
-      >
-        {isRefreshing
-          ? __('Refreshing...', 'arts-license-pro')
-          : isLoading
-            ? isActivated
-              ? __('Deactivating...', 'arts-license-pro')
-              : __('Activating...', 'arts-license-pro')
-            : isActivated
-              ? __('Deactivate', 'arts-license-pro')
-              : __('Activate', 'arts-license-pro')}
-      </Button>
+      <div className="arts-license-pro-form__input-wrapper">
+        <TextControl
+          value={licenseKey}
+          onChange={(value: string) => {
+            setLicenseKey(value)
+            setValidationError(null)
+            setShowingError(false)
+          }}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' && !isActivated && licenseKey.trim()) {
+              e.preventDefault()
+              handleActivateClick()
+            }
+          }}
+          placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
+          help={helpContent}
+          className={validationError || (showingError && apiError) ? 'has-error' : ''}
+          disabled={isLoading || isRefreshing || isActivated}
+          readOnly={isActivated}
+        />
+        <Button
+          variant={isActivated ? 'secondary' : 'primary'}
+          type="button"
+          onClick={isActivated ? handleDeactivateClick : handleActivateClick}
+          isBusy={isLoading || isRefreshing}
+          disabled={isLoading || isRefreshing || (!isActivated && !licenseKey.trim())}
+          isDestructive={isActivated && !isRefreshing}
+          className="arts-license-pro-form__button"
+        >
+          {isRefreshing
+            ? __('Refreshing...', 'arts-license-pro')
+            : isLoading
+              ? isActivated
+                ? __('Deactivating...', 'arts-license-pro')
+                : __('Activating...', 'arts-license-pro')
+              : isActivated
+                ? __('Deactivate', 'arts-license-pro')
+                : __('Activate', 'arts-license-pro')}
+        </Button>
+      </div>
     </div>
   )
 }
