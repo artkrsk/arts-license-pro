@@ -53,7 +53,6 @@ class Updates {
 
 		/** Derive plugin slug and ID from plugin_file */
 		if ( ! empty( $config['plugin_file'] ) ) {
-			$plugin_file       = trailingslashit( WP_PLUGIN_DIR ) . plugin_basename( $config['plugin_file'] );
 			$this->plugin_id   = plugin_basename( $config['plugin_file'] );
 			$this->plugin_slug = dirname( $this->plugin_id );
 		}

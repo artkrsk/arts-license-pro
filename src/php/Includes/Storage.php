@@ -15,13 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Storage {
 
 	/**
-	 * Product ID for option name prefixing
-	 *
-	 * @var string
-	 */
-	private string $product_id;
-
-	/**
 	 * Option key prefix
 	 *
 	 * @var string
@@ -52,7 +45,6 @@ class Storage {
 	 * @param string $product_id Product identifier
 	 */
 	public function __construct( string $product_id ) {
-		$this->product_id    = $product_id;
 		$this->option_prefix = $product_id . '_license';
 	}
 
