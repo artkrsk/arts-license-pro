@@ -2,8 +2,8 @@
 
 namespace Arts\LicensePro\Includes;
 
-use Arts\LicensePro\Includes\Exceptions\LicenseValidationException;
-use Arts\LicensePro\Includes\Exceptions\LicenseServerException;
+use Arts\LicensePro\Includes\Interfaces\APIInterface;
+use Arts\LicensePro\Includes\Interfaces\StorageInterface;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Handles communication with the REST API for license operations.
  */
-class API {
+class API implements APIInterface {
 
 	/**
 	 * API configuration
@@ -26,17 +26,17 @@ class API {
 	/**
 	 * Storage instance
 	 *
-	 * @var Storage
+	 * @var StorageInterface
 	 */
-	private Storage $storage;
+	private StorageInterface $storage;
 
 	/**
 	 * Constructor
 	 *
-	 * @param array   $config  API configuration
-	 * @param Storage $storage Storage instance
+	 * @param array            $config  API configuration
+	 * @param StorageInterface $storage Storage instance
 	 */
-	public function __construct( array $config, Storage $storage ) {
+	public function __construct( array $config, StorageInterface $storage ) {
 		$this->config  = $config;
 		$this->storage = $storage;
 	}
@@ -45,11 +45,14 @@ class API {
 	 * Activate license
 	 *
 	 * @param string $license_key License key to activate
-	 * @return array API response with license data
-	 * @throws \Exception If activation fails
+	 * @return array|\WP_Error API response with license data or WP_Error on failure
 	 */
-	public function activate( string $license_key ): array {
+	public function activate( string $license_key ) {
 		$result = $this->call_api( 'activate', $license_key );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
 		/** Map API response to our format */
 		$result = $this->map_api_response( $result, $license_key );
@@ -66,21 +69,23 @@ class API {
 	/**
 	 * Deactivate license
 	 *
-	 * @return array Empty array on success
-	 * @throws \Exception If no license key found
+	 * @return array|\WP_Error Empty array on success or WP_Error on failure
 	 */
-	public function deactivate(): array {
+	public function deactivate() {
 		$license_key = $this->storage->get_key();
 
 		if ( ! $license_key ) {
-			throw new LicenseValidationException( __( 'No license key found', 'arts-license-pro' ) );
+			return new \WP_Error(
+				'no_license_key',
+				__( 'No license key found', 'arts-license-pro' )
+			);
 		}
 
-		/** Try to deactivate via API (don't throw on failure) */
-		try {
-			$this->call_api( 'deactivate', $license_key );
-		} catch ( \Exception $e ) {
-			/** API deactivation failed, but still clear local data */
+		/** Try to deactivate via API (log on failure but don't stop) */
+		$result = $this->call_api( 'deactivate', $license_key );
+		if ( is_wp_error( $result ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( sprintf( 'License deactivation API failed: %s', $result->get_error_message() ) );
 		}
 
 		/** Always clear local data (even if API failed) */
@@ -92,34 +97,34 @@ class API {
 	/**
 	 * Check license status
 	 *
-	 * @return array|null License data or null if no license
+	 * @return array|\WP_Error|null License data, WP_Error on failure, or null if no license
 	 */
-	public function check(): ?array {
+	public function check() {
 		/** Get stored license key */
 		$license_key = $this->storage->get_key();
 		if ( ! $license_key ) {
 			return null;
 		}
 
-		try {
-			$result = $this->call_api( 'check', $license_key );
+		$result = $this->call_api( 'check', $license_key );
 
-			/** Map API response to our format */
-			$result = $this->map_api_response( $result, $license_key );
-
-			/** Update stored data */
-			$this->storage->set_data( $result );
-
-			return $result;
-		} catch ( \Exception $e ) {
+		if ( is_wp_error( $result ) ) {
 			/** Return stored data as fallback if API call fails */
 			$data = $this->storage->get_data();
 			if ( $data ) {
 				return $data;
 			}
 
-			throw $e;
+			return $result;
 		}
+
+		/** Map API response to our format */
+		$result = $this->map_api_response( $result, $license_key );
+
+		/** Update stored data */
+		$this->storage->set_data( $result );
+
+		return $result;
 	}
 
 	/**
@@ -190,10 +195,9 @@ class API {
 	 *
 	 * @param string $action      API action (activate|deactivate|check)
 	 * @param string $license_key License key
-	 * @return array API response
-	 * @throws \Exception If API call fails
+	 * @return array|\WP_Error API response or WP_Error on failure
 	 */
-	private function call_api( string $action, string $license_key ): array {
+	private function call_api( string $action, string $license_key ) {
 		/** Construct REST API URL */
 		$url = sprintf(
 			'%s/%s/%s/%s?key=%s&url=%s',
@@ -218,7 +222,10 @@ class API {
 
 		/** Handle errors */
 		if ( is_wp_error( $response ) ) {
-			throw new LicenseServerException( $response->get_error_message() );
+			return new \WP_Error(
+				'license_server_error',
+				$response->get_error_message()
+			);
 		}
 
 		/** Parse response */
@@ -226,13 +233,19 @@ class API {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) ) {
-			throw new LicenseServerException( __( 'Invalid API response', 'arts-license-pro' ) );
+			return new \WP_Error(
+				'invalid_response',
+				__( 'Invalid API response', 'arts-license-pro' )
+			);
 		}
 
 		/** Check for API-level errors */
 		if ( isset( $data['success'] ) && ! $data['success'] ) {
-			$message = $data['message'] ?? __( 'License activation failed', 'arts-license-pro' );
-			throw new LicenseValidationException( $message );
+			$message = $data['message'] ?? __( 'License operation failed', 'arts-license-pro' );
+			return new \WP_Error(
+				'license_validation_error',
+				$message
+			);
 		}
 
 		return $data;
