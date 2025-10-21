@@ -1,5 +1,6 @@
 // =============================================================================
 // Pro Badge Component
+// Modern design matching EDD Github Storage
 // =============================================================================
 
 @use 'variables' as *
@@ -7,7 +8,11 @@
 .arts-license-pro-badge-wrapper
   display: inline-flex
   align-items: center
-  gap: $arts-gap-small
+  gap: 5px
+  padding: 4px 8px
+  background: $arts-badge-bg
+  border: 1px solid $arts-badge-border
+  border-radius: 4px
 
   &__label
     font-weight: $arts-font-weight-medium
@@ -15,36 +20,36 @@
 
 .arts-license-pro-badge
   display: inline-block
-  padding: $arts-gap-small $arts-gap-medium
-  border-radius: $arts-border-radius
-  font-size: $arts-font-size-small
-  font-weight: $arts-font-weight-medium
+  font-size: 10px
+  font-weight: 600
+  padding: 2px 6px
+  background-color: $arts-badge-accent
+  color: $arts-badge-text !important
+  border-radius: 12px
+  border: none
   text-decoration: none
+  text-transform: uppercase
+  letter-spacing: 0.5px
   transition: $arts-transition
 
-  // Default styling
-  background-color: $arts-default-bg
-  color: $arts-default-text
-  border: 1px solid $arts-default-border
-
   &:hover
-    background-color: $arts-default-hover
-    color: $arts-default-text
+    background-color: $arts-badge-accent-hover
+    color: $arts-badge-text !important
     text-decoration: none
 
   // Status modifiers
   &_success
-    background-color: $arts-success-bg
-    color: $arts-success-text
-    border-color: $arts-success-border
+    background-color: $arts-badge-success
+    color: $arts-badge-text !important
 
     &:hover
-      background-color: $arts-success-hover
+      background-color: $arts-badge-success-hover
+      color: $arts-badge-text !important
 
   &_warning
-    background-color: $arts-warning-bg
-    color: $arts-warning-text
-    border-color: $arts-warning-border
+    background-color: $arts-badge-warning
+    color: $arts-badge-text !important
 
     &:hover
-      background-color: $arts-warning-hover
+      background-color: $arts-badge-warning-hover
+      color: $arts-badge-text !important
