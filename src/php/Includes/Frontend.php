@@ -89,7 +89,7 @@ class Frontend {
 			wp_enqueue_script(
 				'arts-license-pro-admin',
 				$this->assets_url . 'index.umd.js',
-				array( 'wp-element', 'wp-components', 'wp-i18n', 'wp-date' ),
+				array( 'react', 'react-dom', 'wp-element', 'wp-components', 'wp-i18n', 'wp-date' ),
 				filemtime( $admin_js ),
 				true
 			);
