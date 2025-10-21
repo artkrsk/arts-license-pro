@@ -1,8 +1,8 @@
-import { createElement } from '@wordpress/element'
-import { render } from '@wordpress/element'
 import { LicensePanel } from './components'
 import { ProBadge } from './components'
 import { LicenseAPIAdapter } from './api/LicenseAPIAdapter'
+
+const { createElement, render } = wp.element
 
 /** Auto-mount license panels and pro badges on page load */
 export function autoMountComponents(): void {
