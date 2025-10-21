@@ -45,13 +45,13 @@ class Manager {
 			array(
 				'product_slug' => '',
 				'product_type' => 'plugin',
-				'api_base_url' => '',
+				'api_base_url' => 'https://artemsemkin.com/wp-json',
 			)
 		);
 
 		/** Validate required config */
-		if ( empty( $this->config['product_slug'] ) || empty( $this->config['api_base_url'] ) ) {
-			wp_die( 'License Manager requires product_slug and api_base_url configuration.' );
+		if ( empty( $this->config['product_slug'] ) ) {
+			wp_die( 'License Manager requires product_slug configuration.' );
 		}
 
 		/** Initialize storage and API */
@@ -106,4 +106,3 @@ class Manager {
 		return $this->storage;
 	}
 }
-

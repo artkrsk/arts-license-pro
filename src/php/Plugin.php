@@ -7,7 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Arts\LicensePro\Includes\Manager;
-use Arts\LicensePro\Includes\Updates;
+use Arts\LicensePro\Includes\PluginUpdates;
+use Arts\LicensePro\Includes\ThemeUpdates;
 use Arts\LicensePro\Includes\Frontend;
 use Arts\LicensePro\Includes\AJAX;
 
@@ -29,9 +30,9 @@ class Plugin {
 	/**
 	 * Updates manager instance
 	 *
-	 * @var Updates|null
+	 * @var PluginUpdates|ThemeUpdates|null
 	 */
-	private ?Updates $updates = null;
+	private $updates = null;
 
 	/**
 	 * Frontend manager instance
@@ -60,12 +61,13 @@ class Plugin {
 	 * @param array $config Configuration array with keys:
 	 *                      - product_slug: Product identifier (required)
 	 *                      - product_type: 'plugin' or 'theme' (default: 'plugin')
-	 *                      - api_base_url: Base URL for REST API (required)
+	 *                      - api_base_url: Base URL for REST API (default: 'https://artemsemkin.com/wp-json')
 	 *                      - purchase_url: URL to purchase license (optional)
 	 *                      - support_url: URL for support (optional)
 	 *                      - renew_support_url: URL to renew support (optional)
-	 *                      - plugin_file: Main plugin file path (optional, for updates)
-	 *                      - update_uri: Update URI for plugin header (optional)
+	 *                      - plugin_file: Main plugin file path (optional, for plugin updates)
+	 *                      - update_uri: Update URI for plugin header (optional, for plugin updates)
+	 *                      - theme_slug: Theme directory slug (optional, for theme updates)
 	 */
 	public function __construct( array $config ) {
 		$this->config = wp_parse_args(
@@ -73,28 +75,32 @@ class Plugin {
 			array(
 				'product_slug'      => '',
 				'product_type'      => 'plugin',
-				'api_base_url'      => '',
+				'api_base_url'      => 'https://artemsemkin.com/wp-json',
 				'purchase_url'      => '',
 				'support_url'       => '',
 				'renew_support_url' => '',
 				'plugin_file'       => '',
 				'update_uri'        => '',
+				'theme_slug'        => '',
 				'icons'             => array(),
 				'banners'           => array(),
 			)
 		);
 
 		/** Validate required config */
-		if ( empty( $this->config['product_slug'] ) || empty( $this->config['api_base_url'] ) ) {
-			wp_die( 'Arts License Pro requires product_slug and api_base_url configuration.' );
+		if ( empty( $this->config['product_slug'] ) ) {
+			wp_die( 'Arts License Pro requires product_slug configuration.' );
 		}
 
 		/** Initialize license manager */
 		$this->manager = new Manager( $this->config );
 
-		/** Initialize updates manager if plugin_file provided */
+		/** Initialize updates manager if plugin_file or theme_slug provided */
 		if ( ! empty( $this->config['plugin_file'] ) ) {
-			$this->updates = new Updates( $this->config, $this->manager );
+			$this->updates = new PluginUpdates( $this->config, $this->manager );
+			$this->updates->init();
+		} elseif ( ! empty( $this->config['theme_slug'] ) ) {
+			$this->updates = new ThemeUpdates( $this->config, $this->manager );
 			$this->updates->init();
 		}
 
@@ -125,7 +131,7 @@ class Plugin {
 	 */
 	public function render_license_panel( array $args = array(), bool $return = false ) {
 		$root_id = $this->config['product_slug'] . '-license-panel';
-		$classes = array( 'arts-license-pro-license-panel-mount' );
+		$classes = array( 'arts-license-pro-license-panel-root' );
 
 		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
@@ -157,7 +163,7 @@ class Plugin {
 	public function render_pro_badge( array $args = array(), bool $return = false ) {
 		static $badge_counter = 0;
 		$badge_id             = $this->config['product_slug'] . '-pro-badge-' . ( ++$badge_counter );
-		$classes = array( 'arts-license-pro-badge-mount' );
+		$classes = array( 'arts-license-pro-badge-root' );
 
 		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
