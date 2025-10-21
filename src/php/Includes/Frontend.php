@@ -84,34 +84,28 @@ class Frontend {
 		$enqueued = true;
 
 		/** Enqueue admin script */
-		$admin_js = $this->assets_path . 'index.umd.js';
-		if ( file_exists( $admin_js ) ) {
-			wp_enqueue_script(
-				'arts-license-pro-admin',
-				$this->assets_url . 'index.umd.js',
-				array( 'react', 'react-dom', 'wp-element', 'wp-components', 'wp-i18n', 'wp-date' ),
-				filemtime( $admin_js ),
-				true
-			);
+		wp_enqueue_script(
+			'arts-license-pro-admin',
+			$this->assets_url . 'index.umd.js',
+			array( 'react', 'react-dom', 'wp-element', 'wp-components', 'wp-i18n', 'wp-date' ), // Use WordPress's React
+			false,
+			true
+		);
 
-			/** Localize with all registered instances */
-			wp_localize_script(
-				'arts-license-pro-admin',
-				'artsLicenseProInstances',
-				apply_filters( 'arts/license-pro/instances_data', array() )
-			);
-		}
+		/** Localize with all registered instances */
+		wp_localize_script(
+			'arts-license-pro-admin',
+			'artsLicenseProInstances',
+			apply_filters( 'arts/license-pro/instances_data', array() )
+		);
 
 		/** Enqueue styles */
-		$admin_css = $this->assets_path . 'index.css';
-		if ( file_exists( $admin_css ) ) {
-			wp_enqueue_style(
-				'arts-license-pro-admin',
-				$this->assets_url . 'index.css',
-				array( 'wp-components' ),
-				filemtime( $admin_css )
-			);
-		}
+		wp_enqueue_style(
+			'arts-license-pro-admin',
+			$this->assets_url . 'index.css',
+			array(),
+			false
+		);
 	}
 
 	/**
