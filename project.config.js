@@ -178,7 +178,7 @@ export default {
 
   // Sass configuration
   sass: {
-    enabled: false,
+    enabled: true,
     entry: './src/styles/index.sass',
     output: './dist/index.css',
     options: {
