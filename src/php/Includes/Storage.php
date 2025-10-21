@@ -2,6 +2,8 @@
 
 namespace Arts\LicensePro\Includes;
 
+use Arts\LicensePro\Includes\Interfaces\StorageInterface;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -10,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Storage
  *
  * Handles persistence of license data using wp_options.
- * Each field is stored as a separate option with product_slug prefix.
+ * Stores all license data in a single serialized option for performance.
  */
-class Storage {
+class Storage implements StorageInterface {
 
 	/**
 	 * Option key prefix
@@ -20,24 +22,6 @@ class Storage {
 	 * @var string
 	 */
 	private string $option_prefix;
-
-	/**
-	 * License data fields to store
-	 *
-	 * @var array
-	 */
-	private const LICENSE_FIELDS = array(
-		'status',
-		'expires',
-		'site_count',
-		'license_limit',
-		'activations_left',
-		'is_support_provided',
-		'date_purchased',
-		'date_supported_until',
-		'date_updates_provided_until',
-		'is_local',
-	);
 
 	/**
 	 * Constructor
@@ -88,16 +72,16 @@ class Storage {
 			return null;
 		}
 
-		$data = array( 'license_key' => $key );
+		$data = get_option( $this->option_prefix . '_data' );
 
-		foreach ( self::LICENSE_FIELDS as $field ) {
-			$value = $this->get_field( $field );
-			if ( $value !== null ) {
-				$data[ $field ] = $value;
-			}
+		if ( ! is_array( $data ) || empty( $data ) ) {
+			return null;
 		}
 
-		return ! empty( $data ) ? $data : null;
+		/** Ensure license_key is always included */
+		$data['license_key'] = $key;
+
+		return $data;
 	}
 
 	/**
@@ -107,11 +91,10 @@ class Storage {
 	 * @return void
 	 */
 	public function set_data( array $data ): void {
-		foreach ( self::LICENSE_FIELDS as $field ) {
-			if ( isset( $data[ $field ] ) ) {
-				$this->set_field( $field, $data[ $field ] );
-			}
-		}
+		/** Remove license_key from data since it's stored separately */
+		unset( $data['license_key'] );
+
+		update_option( $this->option_prefix . '_data', $data );
 	}
 
 	/**
@@ -121,41 +104,7 @@ class Storage {
 	 */
 	public function delete_data(): void {
 		$this->delete_key();
-		foreach ( self::LICENSE_FIELDS as $field ) {
-			$this->delete_field( $field );
-		}
-	}
-
-	/**
-	 * Get individual license field
-	 *
-	 * @param string $field Field name
-	 * @return mixed|null
-	 */
-	private function get_field( string $field ) {
-		$value = get_option( $this->option_prefix . '_' . $field );
-		return $value !== false ? $value : null;
-	}
-
-	/**
-	 * Set individual license field
-	 *
-	 * @param string $field Field name
-	 * @param mixed  $value Field value
-	 * @return void
-	 */
-	private function set_field( string $field, $value ): void {
-		update_option( $this->option_prefix . '_' . $field, $value );
-	}
-
-	/**
-	 * Delete individual license field
-	 *
-	 * @param string $field Field name
-	 * @return void
-	 */
-	private function delete_field( string $field ): void {
-		delete_option( $this->option_prefix . '_' . $field );
+		delete_option( $this->option_prefix . '_data' );
 	}
 }
 
