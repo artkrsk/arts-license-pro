@@ -275,4 +275,3 @@ class Updates {
 		echo '<br>' . wp_kses_post( $message );
 	}
 }
-
