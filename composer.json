@@ -1,0 +1,22 @@
+{
+  "name": "arts/license-pro",
+  "description": "",
+  "type": "library",
+  "minimum-stability": "dev",
+  "repositories": [
+  ],
+  "autoload": {
+    "psr-4": {
+      "Arts\\LicensePro\\": "src/php/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Artem Semkin",
+      "email": "me@artemsemkin.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  }
+}
