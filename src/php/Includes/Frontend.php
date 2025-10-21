@@ -118,14 +118,14 @@ class Frontend {
 		$slug = $this->config['product_slug'];
 
 		$instances[ $slug ] = array(
-			'productSlug'     => $slug,
-			'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
-			'nonce'           => wp_create_nonce( $slug . '_license_nonce' ),
-			'initialLicense'  => $this->manager->get_status(),
-			'config'          => array(
-				'purchaseUrl'      => $this->config['purchase_url'] ?? '',
-				'supportUrl'       => $this->config['support_url'] ?? '',
-				'renewSupportUrl'  => $this->config['renew_support_url'] ?? '',
+			'productSlug'    => $slug,
+			'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+			'nonce'          => wp_create_nonce( $slug . '_license_nonce' ),
+			'initialLicense' => $this->manager->get_status(),
+			'config'         => array(
+				'purchaseUrl'     => $this->config['purchase_url'] ?? '',
+				'supportUrl'      => $this->config['support_url'] ?? '',
+				'renewSupportUrl' => $this->config['renew_support_url'] ?? '',
 			),
 		);
 
