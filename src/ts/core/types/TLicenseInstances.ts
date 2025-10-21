@@ -5,4 +5,3 @@ import type { ILicenseInstanceData } from '../interfaces'
  * Used in window.artsLicenseProInstances
  */
 export type TLicenseInstances = Record<string, ILicenseInstanceData>
-

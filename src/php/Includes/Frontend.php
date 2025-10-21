@@ -84,11 +84,11 @@ class Frontend {
 		$enqueued = true;
 
 		/** Enqueue admin script */
-		$admin_js = $this->assets_path . 'admin.umd.js';
+		$admin_js = $this->assets_path . 'index.umd.js';
 		if ( file_exists( $admin_js ) ) {
 			wp_enqueue_script(
 				'arts-license-pro-admin',
-				$this->assets_url . 'admin.umd.js',
+				$this->assets_url . 'index.umd.js',
 				array( 'wp-element', 'wp-components', 'wp-i18n', 'wp-date' ),
 				filemtime( $admin_js ),
 				true
