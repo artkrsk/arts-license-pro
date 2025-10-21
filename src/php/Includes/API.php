@@ -123,6 +123,45 @@ class API {
 	}
 
 	/**
+	 * Fetch update information from update server
+	 *
+	 * @return object|\WP_Error Update data or WP_Error on failure
+	 */
+	public function fetch_update_info() {
+		$license_key = $this->storage->get_key();
+
+		$url = sprintf(
+			'%s/update/%s/%s?key=%s&url=%s',
+			rtrim( $this->config['api_base_url'], '/' ),
+			$this->config['product_slug'],
+			$this->config['product_type'],
+			urlencode( $license_key ?? '' ),
+			urlencode( home_url() )
+		);
+
+		$response = wp_remote_post(
+			$url,
+			array(
+				'timeout' => 15,
+				'headers' => array( 'Accept' => 'application/json' ),
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( $body );
+
+		if ( ! is_object( $data ) ) {
+			return new \WP_Error( 'invalid_response', __( 'Invalid update server response', 'arts-license-pro' ) );
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Map API response to internal format
 	 *
 	 * @param array  $response    API response
