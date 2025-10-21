@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Arts\LicensePro\Includes\Manager;
 use Arts\LicensePro\Includes\Updates;
+use Arts\LicensePro\Includes\Frontend;
+use Arts\LicensePro\Includes\AJAX;
 
 /**
  * Plugin
@@ -30,6 +32,20 @@ class Plugin {
 	 * @var Updates|null
 	 */
 	private ?Updates $updates = null;
+
+	/**
+	 * Frontend manager instance
+	 *
+	 * @var Frontend
+	 */
+	private Frontend $frontend;
+
+	/**
+	 * AJAX manager instance
+	 *
+	 * @var AJAX
+	 */
+	private AJAX $ajax;
 
 	/**
 	 * Configuration
@@ -81,6 +97,14 @@ class Plugin {
 			$this->updates = new Updates( $this->config, $this->manager );
 			$this->updates->init();
 		}
+
+		/** Initialize frontend manager */
+		$this->frontend = new Frontend( $this->config, $this->manager );
+		$this->frontend->init();
+
+		/** Initialize AJAX manager */
+		$this->ajax = new AJAX( $this->config, $this->manager );
+		$this->ajax->init();
 	}
 
 	/**
