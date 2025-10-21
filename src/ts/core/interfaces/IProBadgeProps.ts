@@ -1,5 +1,5 @@
-/** Pro feature teaser badge props */
-export interface IProFeatureTeaserProps {
+/** Pro badge component props */
+export interface IProBadgeProps {
 	/** Feature name to display */
 	featureName?: string
 	/** Dashicon class */
@@ -15,4 +15,3 @@ export interface IProFeatureTeaserProps {
 	/** Badge status for styling */
 	status?: 'default' | 'success' | 'warning'
 }
-
