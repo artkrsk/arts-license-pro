@@ -1,6 +1,7 @@
 export * from './ILicenseAPI'
 export * from './ILicenseConfig'
 export * from './ILicenseFormProps'
+export * from './ILicenseInstanceData'
 export * from './ILicenseLicenseData'
 export * from './ILicensePanelProps'
 export * from './IProBadgeProps'
