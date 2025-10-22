@@ -22,27 +22,27 @@
   display: inline-block
   font-size: 10px
   font-weight: 600
-  padding: 2px 6px
+  padding: 4px 8px
   background-color: $arts-badge-accent
   color: $arts-badge-text !important
-  border-radius: 12px
+  border-radius: 9999px
   border: none
   text-decoration: none
   text-transform: uppercase
   letter-spacing: 0.5px
   transition: $arts-transition
-
-  &:hover
-    background-color: $arts-badge-accent-hover
-    color: $arts-badge-text !important
-    text-decoration: none
+  &[href]
+    &:hover
+      background-color: $arts-badge-accent-hover
+      color: $arts-badge-text !important
+      text-decoration: none
 
   // Status modifiers
   &_success
     background-color: $arts-badge-success
     color: $arts-badge-text !important
 
-    &:hover
+    &[href]:hover
       background-color: $arts-badge-success-hover
       color: $arts-badge-text !important
 
@@ -50,6 +50,6 @@
     background-color: $arts-badge-warning
     color: $arts-badge-text !important
 
-    &:hover
+    &[href]:hover
       background-color: $arts-badge-warning-hover
       color: $arts-badge-text !important
