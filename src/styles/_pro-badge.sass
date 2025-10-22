@@ -22,6 +22,7 @@
   display: inline-block
   font-size: 10px
   font-weight: 600
+  line-height: 1
   padding: 4px 8px
   background-color: $arts-badge-accent
   color: $arts-badge-text !important
@@ -31,11 +32,10 @@
   text-transform: uppercase
   letter-spacing: 0.5px
   transition: $arts-transition
-  &[href]
-    &:hover
-      background-color: $arts-badge-accent-hover
-      color: $arts-badge-text !important
-      text-decoration: none
+  &[href]:hover
+    background-color: $arts-badge-accent-hover
+    color: $arts-badge-text !important
+    text-decoration: none
 
   // Status modifiers
   &_success
