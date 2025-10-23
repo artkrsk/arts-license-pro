@@ -19,7 +19,10 @@ export const ProBadge = ({
   const statusClass = status !== 'default' ? ` arts-license-pro-badge_${status}` : ''
   const badgeClassName = `arts-license-pro-badge${statusClass}`
 
-  const badge = renderAsLink ? (
+  // Only render as link if renderAsLink is true AND href is provided
+  const shouldRenderAsLink = renderAsLink && href
+  
+  const badge = shouldRenderAsLink ? (
     <a
       href={href}
       className={badgeClassName}
