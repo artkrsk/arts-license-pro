@@ -150,13 +150,15 @@ class API implements APIInterface {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-		$data = json_decode( $body );
+		$data = json_decode( $body, true );
 
-		if ( ! is_object( $data ) ) {
+		if ( ! is_array( $data ) ) {
 			return new \WP_Error( 'invalid_response', __( 'Invalid update server response', 'arts-license-pro' ) );
 		}
 
-		return $data;
+		// Cast to object for top-level properties while keeping nested arrays as arrays
+		// This ensures 'sections' remains an array as WordPress expects
+		return (object) $data;
 	}
 
 	/**
