@@ -1,7 +1,8 @@
 {
   "name": "arts/license-pro",
-  "description": "",
+  "description": "License management for Arts WordPress plugins",
   "type": "library",
+  "license": "GPL-3.0-or-later",
   "minimum-stability": "dev",
   "repositories": [
   ],
