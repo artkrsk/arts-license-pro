@@ -19,7 +19,6 @@ Thumbs.db
 *.code-workspace
 
 # Build output
-/dist
 
 # Dependencies
 /node_modules

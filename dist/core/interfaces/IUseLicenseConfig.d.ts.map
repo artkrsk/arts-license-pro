@@ -1,0 +1,1 @@
+{"version":3,"file":"IUseLicenseConfig.d.ts","sourceRoot":"","sources":["../../../src/ts/core/interfaces/IUseLicenseConfig.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,eAAe,CAAA;AAChD,OAAO,KAAK,EAAE,mBAAmB,EAAE,MAAM,uBAAuB,CAAA;AAEhE,oCAAoC;AACpC,MAAM,WAAW,iBAAiB;IACjC,cAAc,EAAE,mBAAmB,GAAG,IAAI,CAAA;IAC1C,GAAG,EAAE,WAAW,CAAA;CAChB"}
