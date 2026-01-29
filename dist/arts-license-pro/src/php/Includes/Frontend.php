@@ -28,13 +28,6 @@ class Frontend {
 	private Manager $manager;
 
 	/**
-	 * Assets base path
-	 *
-	 * @var string
-	 */
-	private string $assets_path;
-
-	/**
 	 * Assets base URL
 	 *
 	 * @var string
@@ -51,9 +44,8 @@ class Frontend {
 		$this->config  = $config;
 		$this->manager = $manager;
 
-		/** Set assets path and URL */
-		$this->assets_path = dirname( __DIR__ ) . '/libraries/arts-license-pro/';
-		$this->assets_url  = plugins_url( 'libraries/arts-license-pro/', dirname( __DIR__ ) . '/Plugin.php' );
+		/** Set assets URL */
+		$this->assets_url = plugins_url( 'libraries/arts-license-pro/', dirname( __DIR__ ) . '/Plugin.php' );
 	}
 
 	/**

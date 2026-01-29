@@ -74,3 +74,6 @@ next-env.d.ts
 
 # Project specific
 /drafts
+.vscode
+.claude
+/dist

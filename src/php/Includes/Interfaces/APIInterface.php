@@ -42,4 +42,3 @@ interface APIInterface {
 	 */
 	public function fetch_update_info();
 }
-

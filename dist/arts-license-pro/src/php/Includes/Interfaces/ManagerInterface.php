@@ -48,4 +48,3 @@ interface ManagerInterface {
 	 */
 	public function get_errors();
 }
-

@@ -69,7 +69,7 @@ class ThemeUpdates {
 
 		/** Hook into WordPress theme update system */
 		add_filter( 'pre_set_site_transient_update_themes', array( $this, 'modify_theme_update_transient' ) );
-		add_filter( 'delete_site_transient_update_themes', array( $this, 'delete_theme_update_transient' ) );
+		add_action( 'delete_site_transient_update_themes', array( $this, 'delete_theme_update_transient' ) );
 
 		/** Clear cache when license data or key changes */
 		add_action( 'update_option_' . $this->config['product_slug'] . '_license_data', array( $this, 'clear_update_cache' ) );
@@ -137,7 +137,7 @@ class ThemeUpdates {
 	 *
 	 * @return void
 	 */
-	public function delete_theme_update_transient() {
+	public function delete_theme_update_transient(): void {
 		delete_transient( $this->response_key );
 	}
 

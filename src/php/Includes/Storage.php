@@ -93,4 +93,3 @@ class Storage implements StorageInterface {
 		delete_option( $this->option_prefix . '_data' );
 	}
 }
-
