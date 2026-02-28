@@ -46,5 +46,6 @@ project.*.js export-ignore
 
 # Markdown files except README.md
 /*.md export-ignore
+README.md -export-ignore
 .vscode export-ignore
 .claude export-ignore
