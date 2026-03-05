@@ -1150,8 +1150,8 @@
             "version": "2.2.x-dev",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/44ba48e57f10473ce9b2b453b90e15b64dacf2d8",
-                "reference": "44ba48e57f10473ce9b2b453b90e15b64dacf2d8",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d143f54e74362fe8e4af3971b170b754d78d393a",
+                "reference": "d143f54e74362fe8e4af3971b170b754d78d393a",
                 "shasum": ""
             },
             "require": {
@@ -1197,7 +1197,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-28T19:21:51+00:00"
+            "time": "2026-03-05T07:58:05+00:00"
         },
         {
             "name": "psr/container",
@@ -1514,12 +1514,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "9a236c65e14c30d27cca642888a40a969f7c081a"
+                "reference": "c0b741c1729e91644727b3db90f63e26598c673c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/9a236c65e14c30d27cca642888a40a969f7c081a",
-                "reference": "9a236c65e14c30d27cca642888a40a969f7c081a",
+                "url": "https://api.github.com/repos/symfony/console/zipball/c0b741c1729e91644727b3db90f63e26598c673c",
+                "reference": "c0b741c1729e91644727b3db90f63e26598c673c",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1602,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-25T17:08:26+00:00"
+            "time": "2026-03-02T19:28:35+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1682,12 +1682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "e69f8b8122f465c8524aad710c1f7a954f3d7fbb"
+                "reference": "887783fbf51c9a30ac67bf751a3a8829e4d7f2db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/e69f8b8122f465c8524aad710c1f7a954f3d7fbb",
-                "reference": "e69f8b8122f465c8524aad710c1f7a954f3d7fbb",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/887783fbf51c9a30ac67bf751a3a8829e4d7f2db",
+                "reference": "887783fbf51c9a30ac67bf751a3a8829e4d7f2db",
                 "shasum": ""
             },
             "require": {
@@ -1746,7 +1746,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-25T17:08:26+00:00"
+            "time": "2026-03-02T09:38:43+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
