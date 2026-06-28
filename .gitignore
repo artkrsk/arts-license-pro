@@ -70,7 +70,8 @@ next-env.d.ts
 *.temp
 
 # WordPress specific
-/src/php/libraries/*
+# Ship built UI library bundles so composer --no-dev installs include them; ignore only sourcemaps
+/src/php/libraries/*/*.map
 
 # Project specific
 /drafts
