@@ -4,101 +4,35 @@
 
 @use 'variables' as *
 
-.arts-license-pro-license-form
-  max-width: 800px
-  .arts-license-pro-license-info
-    margin-bottom: 16px
-    padding: 12px
-    background-color: #f6f7f7
-    border: 1px solid #dcdcde
-    border-radius: $arts-border-radius
+// The form renders its license details as a plain list in the control's help slot:
+// .arts-license-pro-info > .arts-license-pro-info__list > li, where an expired row carries
+// .arts-license-pro-error and each row leads with a ✓/✕ in .arts-license-pro-error__icon.
+// (This replaces styling written for an older .arts-license-pro-license-info markup — a card
+// with its own title, status pills and action row — that the components no longer render.)
+.arts-license-pro-info
+  margin-top: 8px
 
-  .arts-license-pro-license-info__title
-    margin: 0 0 8px 0
-    font-size: 14px
-    font-weight: 600
-    color: #1d2327
-
-  .arts-license-pro-license-info__details
+  &__list
     margin: 0
+    padding: 0
+    list-style: none
     font-size: 13px
+    line-height: 1.6
     color: #50575e
 
-  .arts-license-pro-license-info__detail
-    margin-bottom: 4px
+    li
+      margin: 0 0 4px 0
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      gap: $arts-gap-small
 
-    &:last-child
-      margin-bottom: 0
+      &:last-child
+        margin-bottom: 0
 
-  .arts-license-pro-license-info__label
-    font-weight: 500
-    color: #1d2327
-
-  .arts-license-pro-license-info__value
-    color: #50575e
-
-  .arts-license-pro-license-info__status
-    display: inline-flex
-    align-items: center
-    gap: $arts-gap-small
-    padding: 2px 6px
-    border-radius: $arts-border-radius-small
-    font-size: $arts-font-size-small
+.arts-license-pro-error
+  &__icon
     font-weight: $arts-font-weight-medium
-
-    &_active
-      background-color: $arts-success-bg
-      color: $arts-success-text
-
-    &_expired
-      background-color: $arts-warning-bg
-      color: $arts-warning-text
-
-    &_inactive
-      background-color: $arts-default-bg
-      color: $arts-default-text
-
-  .arts-license-pro-license-info__icon
-    font-size: 12px
-
-  .arts-license-pro-license-info__actions
-    margin-top: 12px
-    display: flex
-    gap: $arts-gap-medium
-    flex-wrap: wrap
-
-  .arts-license-pro-license-info__action
-    display: inline-flex
-    align-items: center
-    gap: $arts-gap-small
-    padding: 4px 8px
-    border-radius: $arts-border-radius
-    font-size: $arts-font-size-small
-    font-weight: $arts-font-weight-medium
-    text-decoration: none
-    transition: $arts-transition
-
-    &_primary
-      background-color: #2271b1
-      color: #fff
-
-      &:hover
-        background-color: #135e96
-        color: #fff
-        text-decoration: none
-
-    &_secondary
-      background-color: #f6f7f7
-      color: #50575e
-      border: 1px solid #dcdcde
-
-      &:hover
-        background-color: #f0f0f1
-        color: #1d2327
-        text-decoration: none
-
-  .arts-license-pro-license-info__action-icon
-    font-size: 12px
 
 .arts-license-pro-form
   max-width: 800px
