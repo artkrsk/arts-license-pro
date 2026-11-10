@@ -75,6 +75,8 @@ class Plugin {
 	 *                      - plugin_file: Main plugin file path (optional, for plugin updates)
 	 *                      - update_uri: Update URI for plugin header (optional, for plugin updates)
 	 *                      - theme_slug: Theme directory slug (optional, for theme updates)
+	 *                      - icons: Plugin update icons (optional, for plugin updates)
+	 *                      - banners: Plugin update banners (optional, for plugin updates)
 	 */
 	public function __construct( array $config ) {
 		$this->config = wp_parse_args(
