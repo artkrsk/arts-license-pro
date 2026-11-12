@@ -34,7 +34,7 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
     `ProBadge`), `hooks/` (`useLicense`), `auto-mount.ts`, `interfaces/`, `types/`.
   - `global.d.ts` — declares the WordPress-provided `wp` global.
 - `src/styles/` — Sass, compiled to `dist/index.css`.
-- `__build__/` — git submodule (`arts-public-builder`), the esbuild-based build runner.
+- `__build__/` — the esbuild-based build runner, plain files of this repository (a submodule of `arts-public-builder` until 2026-11-12). Its own dependencies: `pnpm install` inside `__build__/`.
 - `dist/` and `src/php/libraries/` — build output (gitignored where noted below).
 
 ## Commands
