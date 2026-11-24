@@ -111,6 +111,6 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
 ## Dependencies
 
 - PHP: runtime requires only `php >=8.0` (no runtime Composer deps). Dev: PHPStan
-  (+ phpstan-wordpress), PHP_CodeSniffer + WPCS, CaptainHook, composer-normalize.
+  (+ phpstan-wordpress), PHP_CodeSniffer + WPCS, CaptainHook.
 - JS: no bundled runtime deps — relies on WordPress-provided React and `@wordpress/*` globals.
   Build/test tooling: esbuild (via `__build__`), Vitest, Cypress, ESLint, Prettier, Sass.
