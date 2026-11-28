@@ -25,7 +25,6 @@ export async function generatePot(config) {
     const langDir = path.dirname(config.i18n.dest)
     await fs.ensureDir(langDir)
 
-    // Check if existing POT file exists
     const fileExists = await fs.pathExists(config.i18n.dest)
 
     // Create a temporary file for the new POT content
@@ -43,7 +42,6 @@ export async function generatePot(config) {
       src: config.i18n.src
     })
 
-    // Check if temporary file was created
     if (!(await fs.pathExists(tempPotFile))) {
       logger.warn(`⚠️ Failed to generate temporary POT file: ${tempPotFile}`)
       return
@@ -57,7 +55,6 @@ export async function generatePot(config) {
 
     const newContent = await fs.readFile(tempPotFile, 'utf8')
 
-    // Calculate hashes for comparison
     const oldHash = calculateTranslationHash(oldContent)
     const newHash = calculateTranslationHash(newContent)
 
@@ -85,8 +82,9 @@ export async function generatePot(config) {
 }
 
 /**
- * Calculate a hash of just the actual translation strings (msgid/msgstr pairs)
- * This ignores all header metadata, dates, and file information
+ * Calculate a hash of the msgids of entries that have a `#:` source reference.
+ * Headers, dates and msgstr values do not affect it, so regenerating an
+ * otherwise identical POT does not count as a change.
  * @param {string} potContent - The content of a POT file
  * @returns {string} A hash representing just the translatable strings
  */
@@ -96,7 +94,6 @@ function calculateTranslationHash(potContent) {
   // Regular expression to match msgid blocks, handling multiline and escaped quotes
   const regex = /#:.+?\nmsgid\s+"(.+?)"\nmsgstr\s+(.+?)(?=\n\n|\n#:|$)/gs
 
-  // Extract all translation entries
   const translations = []
   let match
 
@@ -117,7 +114,6 @@ function calculateTranslationHash(potContent) {
   // Convert to a stable string representation (just msgids in order)
   const translationString = translations.map((t) => t.msgid).join('|')
 
-  // Generate hash (using SHA-256 for security best practices)
   return crypto.createHash('sha256').update(translationString).digest('hex')
 }
 
@@ -131,7 +127,6 @@ export async function updatePotDate(potFile) {
     if (await fs.pathExists(potFile)) {
       let content = await fs.readFile(potFile, 'utf8')
 
-      // Update POT-Creation-Date with current date
       const currentDate = new Date().toISOString()
       content = content.replace(/("POT-Creation-Date: )(.*)(")/, `$1${currentDate}$3`)
 
@@ -157,7 +152,6 @@ export async function watchPhpForTranslations(config) {
 
   logger.info('👀 Watching PHP files for translations...')
 
-  // Create debounced build function
   const debouncedGenerate = debounce(async (filePath) => {
     logger.info(`🔄 PHP file changed: ${path.relative(process.cwd(), filePath)}`)
 
@@ -168,7 +162,6 @@ export async function watchPhpForTranslations(config) {
     }
   }, 500)
 
-  // Setup watcher
   const watcher = chokidar.watch(phpPatterns, {
     persistent: true,
     ignoreInitial: true

@@ -6,7 +6,7 @@ import { logger } from '../../logger/index.js'
 import { getPluginMainFile, getPluginPath, getPluginDestPath } from '../common/paths.js'
 
 /**
- * WordPress plugin file header fields and their regex patterns
+ * WordPress plugin file header fields and the line prefix each one is matched by
  */
 const PLUGIN_HEADER_FIELDS = {
   'Plugin Name': 'Plugin Name:',
@@ -29,7 +29,7 @@ const PLUGIN_HEADER_FIELDS = {
 }
 
 /**
- * Update WordPress plugin metadata based on composer.json
+ * Update the plugin main file header and readme.txt from composer.json and package.json
  * @param {Object} config - Project configuration
  * @returns {Promise<void>}
  */
@@ -37,10 +37,8 @@ export async function updatePluginMeta(config) {
   logger.info('Updating plugin metadata...')
 
   try {
-    // Use project root from config or fall back to current working directory
     const projectRoot = config._absoluteProjectRoot || process.cwd()
 
-    // Read composer.json, package.json
     const composerFile = path.join(projectRoot, 'composer.json')
     const packageFile = path.join(projectRoot, 'package.json')
 
@@ -49,7 +47,6 @@ export async function updatePluginMeta(config) {
       return
     }
 
-    // Read files
     const composerData = await fs.readJson(composerFile)
     const packageData = await fs.readJson(packageFile)
 
@@ -123,7 +120,7 @@ function extractPluginMetadata(composerData, packageData) {
   }
   if (composerData.license) metadata['License'] = composerData.license
 
-  // Get text domain from project config or infer from name
+  // Text domain is always derived from the plugin name; the overrides below can replace it
   metadata['Text Domain'] = metadata['Plugin Name'].toLowerCase().replace(/\s+/g, '-')
 
   // WordPress-specific fields take absolute priority if defined in composer.json
@@ -306,7 +303,6 @@ async function updateReadmeFile(filePath, metaData) {
  * @returns {Object} - Watcher instance
  */
 export async function watchComposerJson(config) {
-  // Use project root from config or fall back to current working directory
   const projectRoot = config._absoluteProjectRoot || process.cwd()
   const composerFile = path.join(projectRoot, 'composer.json')
   const composerLockFile = path.join(projectRoot, 'composer.lock')
@@ -337,7 +333,6 @@ export async function watchComposerJson(config) {
     }
   }, 300)
 
-  // Setup watcher
   const watcher = chokidar.watch([composerFile, composerLockFile], {
     persistent: true,
     ignoreInitial: true

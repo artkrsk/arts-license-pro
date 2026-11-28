@@ -93,7 +93,6 @@ class API implements APIInterface {
 	 * Check license status
 	 */
 	public function check() {
-		/** Get stored license key */
 		$license_key = $this->storage->get_key();
 		if ( ! $license_key ) {
 			return null;
@@ -114,7 +113,6 @@ class API implements APIInterface {
 		/** Map API response to our format */
 		$result = $this->map_api_response( $result, $license_key );
 
-		/** Update stored data */
 		$this->storage->set_data( $result );
 
 		return $result;
@@ -193,7 +191,6 @@ class API implements APIInterface {
 	 * @return array|\WP_Error API response or WP_Error on failure
 	 */
 	private function call_api( string $action, string $license_key ) {
-		/** Construct REST API URL */
 		$url = sprintf(
 			'%s/%s/%s/%s?key=%s&url=%s',
 			rtrim( $this->config['api_base_url'], '/' ),
@@ -204,7 +201,6 @@ class API implements APIInterface {
 			urlencode( home_url() )
 		);
 
-		/** Make API request */
 		$response = wp_remote_post(
 			$url,
 			array(
@@ -215,7 +211,6 @@ class API implements APIInterface {
 			)
 		);
 
-		/** Handle errors */
 		if ( is_wp_error( $response ) ) {
 			return new \WP_Error(
 				'license_server_error',
@@ -223,7 +218,6 @@ class API implements APIInterface {
 			);
 		}
 
-		/** Parse response */
 		$body = wp_remote_retrieve_body( $response );
 		$data = json_decode( $body, true );
 

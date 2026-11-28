@@ -7,7 +7,6 @@ export default function (baseConfig) {
   // Create a deep copy to avoid modifying the original
   const config = JSON.parse(JSON.stringify(baseConfig))
 
-  // Set environment
   config.currentEnvironment = 'production'
 
   // Production-specific settings

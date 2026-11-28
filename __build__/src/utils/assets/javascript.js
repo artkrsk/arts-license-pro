@@ -27,7 +27,7 @@ export async function compileJavaScript(config) {
   const isDev = isDevelopment(config)
   const shouldCreateDist = shouldCreateDistFolder(config)
 
-  // In development, always include ESM format for code splitting
+  // ESM (code splitting) is always built in development and whenever no dist folder is created
   const formats = isDev
     ? ['iife', 'esm']
     : shouldCreateDist
@@ -37,7 +37,6 @@ export async function compileJavaScript(config) {
   try {
     const packageMetadata = await getPackageMetadata(config)
 
-    // Process each format
     for (const format of formats) {
       logger.debug(`⚙️ Building ${format} format...`)
 
@@ -65,7 +64,6 @@ export async function compileJavaScript(config) {
       // Ensure output directory exists
       await fs.ensureDir(outputDir)
 
-      // Create build configuration
       const buildConfig = {
         entryPoints: [config.entry],
         outfile: outputFile,
@@ -131,7 +129,7 @@ export async function compileJavaScript(config) {
           logger.debug('📝 Added banner to index.mjs')
         }
 
-        // Copy ESM files to dist if needed
+        // Copy ESM files to the library directory when a dist folder is created
         if (shouldCreateDist) {
           await copyEsmToLibrary(config, isDev)
         }
@@ -179,10 +177,8 @@ async function copyUmdToLibrary(outputFile, config, isDev) {
     return
   }
 
-  // Get library directory
   const libraryDir = getLibraryDir(config, isDev)
 
-  // Ensure dir exists
   await fs.ensureDir(libraryDir)
 
   logger.debug(`📂 Copying UMD build to library: ${libraryDir}`)
@@ -255,7 +251,7 @@ async function copyEsmToLibrary(config, isDev) {
  * Watch JavaScript files for changes
  * @param {Object} config - Project configuration
  * @param {Object} liveReloadServer - Live reload server instance
- * @returns {Object} - Watcher instance
+ * @returns {Promise<Object>} - Watcher instance
  */
 export async function watchJavaScript(config, liveReloadServer) {
   const jsDir = path.resolve(config.paths.js)
@@ -283,7 +279,6 @@ export async function watchJavaScript(config, liveReloadServer) {
     }
   }, 300)
 
-  // Setup watcher
   const watcher = chokidar.watch(jsDir, {
     ignored: config.watch.ignored || ['**/node_modules/**', '**/dist/**'],
     persistent: true,

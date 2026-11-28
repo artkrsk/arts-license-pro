@@ -26,7 +26,6 @@ export async function startLiveReloadServer(config) {
       debug: console.debug
     }
 
-    // Create a browser-sync instance
     const bs = browserSync.create()
 
     // Temporarily silence console during initialization
@@ -35,7 +34,7 @@ export async function startLiveReloadServer(config) {
       console.info = () => {}
       console.warn = () => {}
       console.debug = () => {}
-      // Keep error for important issues
+      // Drop all errors except those mentioning Browsersync
       console.error = (...args) => {
         if (args.length > 0 && typeof args[0] === 'string' && args[0].includes('Browsersync')) {
           // Still log browser-sync errors to our logger
@@ -99,7 +98,7 @@ export async function startLiveReloadServer(config) {
       bsConfig.snippet = false
     }
 
-    // Add custom notify styles if configured (but still keep notifications off by default)
+    // `notify` is a boolean here, so `.styles` is always undefined and this resolves to `true`
     if (config.liveReload.notify === true) {
       bsConfig.notify = config.liveReload.notify.styles || true
     }
@@ -129,7 +128,6 @@ export async function startLiveReloadServer(config) {
       }, 2000)
     })
 
-    // Create a wrapper for the browser-sync instance
     return {
       /**
        * Notify browser-sync of file changes

@@ -33,9 +33,9 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
   - `core/` — `api/` (`LicenseAPIAdapter`), `components/` (`LicensePanel`, `LicenseForm`,
     `ProBadge`), `hooks/` (`useLicense`), `auto-mount.ts`, `interfaces/`, `types/`.
   - `global.d.ts` — declares the WordPress-provided `wp` global.
-- `src/styles/` — Sass, compiled to `dist/index.css`.
-- `__build__/` — the esbuild-based build runner, plain files of this repository (a submodule of `arts-public-builder` until 2026-11-12). Its own dependencies: `pnpm install` inside `__build__/`.
-- `dist/` and `src/php/libraries/` — build output (gitignored where noted below).
+- `src/styles/` — Sass, compiled to `src/php/libraries/arts-license-pro/index.css` (a production build also writes `dist/index.css`).
+- `__build__/` — the esbuild-based build runner, plain files of this repository. Its own dependencies: `pnpm install` inside `__build__/`.
+- `dist/` and `src/php/libraries/` — build output, committed (see Gotchas).
 
 ## Commands
 
@@ -43,10 +43,14 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
   `composer phpstan` individually; `composer fix` runs phpcbf. Standards: `phpcs.xml`,
   `phpstan.neon` (both baseline clean).
 - Build / watch: `pnpm build` / `pnpm dev` (delegate to `node __build__/src/index.js`). The build
-  externalizes React and every `@wordpress/*` dep to `wp.*` globals — nothing is bundled.
-- TS typecheck: `pnpm exec tsc --noEmit` (config has pre-existing deprecation warnings for
-  `baseUrl` / `moduleResolution` / `downlevelIteration`).
-- JS tests: Vitest (`vitest.config.js`). Run it directly (`pnpm exec vitest`) — see Gotchas.
+  externalizes React and every `@wordpress/*` dep to browser globals (`React`, `ReactDOM`, `wp.*`)
+  — nothing is bundled. In dev, `src/php` is also mirrored into the consumer plugins'
+  `vendor/arts/license-pro/src/php` (targets in `project.development.js`).
+- TS typecheck: `tsconfig.json` is strict, but `typescript` is not a dependency of this package
+  (`tsc` resolves only to a transitive copy), and `pnpm exec tsc --noEmit` fails on `.d.ts` errors
+  inside `node_modules`; the esbuild build does not typecheck.
+- JS tests: Vitest (`vitest.config.js`), run directly (`pnpm exec vitest`) — see Gotchas. No test
+  files exist yet, so it exits 1 with "No test files found".
 
 ## Public PHP API (`Arts\LicensePro\Plugin`)
 
@@ -68,7 +72,7 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
   `Frontend::enqueue_scripts` fires it to build the localized data. This is the PHP↔JS contract.
 - **AJAX actions** (require `manage_options` + nonce): `wp_ajax_{product_slug}_license_activate`,
   `_deactivate`, `_check`.
-- **Plugin updates** (`PluginUpdates`): `plugins_api` (99), `update_plugins_{update_uri}` (99),
+- **Plugin updates** (`PluginUpdates`): `plugins_api` (99), `update_plugins_{hostname}` (99; WordPress derives the hostname from the plugin's Update URI header, while the code appends the raw `update_uri` config value, so it must be a bare hostname),
   `in_plugin_update_message-{plugin_id}` (10); cache cleared on
   `update_option_/delete_option_{product_slug}_license_data` and `_license_key`.
 - **Theme updates** (`ThemeUpdates`): `pre_set_site_transient_update_themes`,
@@ -104,9 +108,11 @@ integration; the JS side is the admin panel that talks back through `admin-ajax.
   update object's `sections` as an array, so the `(object)` cast is deliberately shallow.
 - **Assets enqueue once** via a static guard even with several product instances on a screen.
 - **Phantom npm scripts.** `pnpm test` / `test:*` / `test:svn` call shell harnesses under
-  `__tests__/` and `scripts/` that are not in this repo; run Vitest directly instead.
-- **Generated, gitignored dirs:** `src/php/libraries/*` (the admin UMD bundle) and `/dist` are
-  build products — don't hand-edit them; edit `src/` and rebuild.
+  `__tests__/` and `scripts/` that are not in this repo; run Vitest directly instead. `format` /
+  `format:check` glob `src/js`, which does not exist (the source is `src/ts`).
+- **Build output is committed:** `src/php/libraries/*` (the admin UMD bundle, committed so
+  `composer --no-dev` installs ship it; only `*.map` is ignored) and `dist/` (listed in
+  `.gitignore` but already tracked) — don't hand-edit them; edit `src/` and rebuild.
 
 ## Dependencies
 

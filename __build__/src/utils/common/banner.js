@@ -5,7 +5,6 @@
  * @returns {string} The UMD wrapper opening code
  */
 export function generateUmdBanner(globalName, externals = {}) {
-  // Get external package names as an array
   const externalPackages = Object.keys(externals)
 
   // If no externals, generate a simpler UMD wrapper
@@ -68,6 +67,7 @@ export function generateUmdFooter(globalName) {
  * @param {Object} options - Banner options
  * @param {string} options.name - Project name
  * @param {string} options.version - Project version
+ * @param {string} [options.description] - Project description
  * @param {string} [options.author] - Project author
  * @param {string} [options.license] - Project license
  * @param {string} [options.homepage] - Project homepage
@@ -76,7 +76,6 @@ export function generateUmdFooter(globalName) {
  * @returns {string} - Banner text
  */
 export function generateBanner(options = {}) {
-  // Default values
   options = {
     name: 'Unknown Project',
     version: '1.0.0',
@@ -107,7 +106,6 @@ export function generateBanner(options = {}) {
     ` */`
   ]
 
-  // Filter out empty lines and join
   return bannerLines.filter((line) => line !== '').join('\n')
 }
 
@@ -160,7 +158,6 @@ export function generatePackageBanner(packageInfo) {
 export function wrapAsUmd(content, globalName, externals = {}, packageMetadata = {}) {
   const banner = generateBanner(packageMetadata)
 
-  // Get UMD wrapper
   const umdBanner = generateUmdBanner(globalName, externals)
   const umdFooter = generateUmdFooter(globalName)
 

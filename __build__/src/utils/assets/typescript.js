@@ -15,7 +15,7 @@ import { isDevelopment, getConfigValue } from '../../config/index.js'
  * @param {Object} config - Project configuration
  * @param {boolean} watchMode - Whether to run in watch mode
  * @param {Object} liveReloadServer - Live reload server instance (optional)
- * @returns {Promise<void>}
+ * @returns {Promise<Object|void>} - compiler.watch() result in watch mode, nothing otherwise
  */
 export async function compileTypeScript(config, watchMode = false, liveReloadServer = null) {
   logger.info(`🔧 Compiling TypeScript with Webpack (${watchMode ? 'watch' : 'build'} mode)...`)
@@ -223,7 +223,7 @@ export async function compileTypeScript(config, watchMode = false, liveReloadSer
  * Watch TypeScript files for changes
  * @param {Object} config - Project configuration
  * @param {Object} liveReloadServer - Live reload server instance
- * @returns {Object} - Watcher instance
+ * @returns {Promise<Object>} - Watcher instance
  */
 export async function watchTypeScript(config, liveReloadServer) {
   const tsDir = path.resolve(getConfigValue(config, 'paths.ts', config.paths.js))

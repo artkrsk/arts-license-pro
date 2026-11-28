@@ -1,7 +1,7 @@
 import { logger } from './logger.js'
 
 /**
- * Wraps a function with error handling
+ * Wraps a function so any error is logged with its context and then rethrown
  * @param {Function} fn - The function to wrap
  * @param {string} [context] - Optional context for error logging
  * @returns {Function} The wrapped function

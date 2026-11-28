@@ -23,7 +23,7 @@ import { generatePot, watchPhpForTranslations } from '../utils/wordpress/i18n.js
 import { startLiveReloadServer } from '../utils/common/live-reload.js'
 
 /**
- * Main Builder class for the Fluid Design System
+ * Runs the production build and the development watch pipeline
  */
 export class Builder {
   constructor() {
@@ -52,11 +52,9 @@ export class Builder {
    */
   async loadConfig(env = process.env.NODE_ENV || 'development') {
     try {
-      // Load configuration
       logger.info(`📋 Loading configuration for "${env}" environment...`)
       this.config = await loadProjectConfig(this.paths.project, env)
 
-      // Validate configuration
       validateConfig(this.config)
 
       logger.success(`✅ Configuration loaded for "${env}" environment`)
@@ -191,7 +189,6 @@ export class Builder {
 
       logger.info('🚀 Starting production build...')
 
-      // Get package version
       const version = await getPackageVersion(this.paths.project)
       this.config.version = version
 
@@ -220,23 +217,19 @@ export class Builder {
       // Compile Sass (will build to direct library or dist based on config)
       await compileSass(this.config)
 
-      // Generate POT file
       await generatePot(this.config)
 
       // Sync files to target directories (if any)
       await syncFiles(this.config, false)
 
-      // Force copy library files to ensure they're in the right place
       if (shouldCreateDistFolder(this.config)) {
         logger.info('🔄 Ensuring library files are correctly placed...')
 
         const libraryDir = getLibraryDir(this.config, false)
 
-        // Log what we're going to copy for debugging
         logger.debug(`📂 Making sure library directory exists: ${libraryDir}`)
         await fs.ensureDir(libraryDir)
 
-        // Create ZIP archive
         await createZipArchive(this.config)
       } else {
         // Make sure no dist folder exists if it shouldn't
