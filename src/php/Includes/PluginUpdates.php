@@ -72,7 +72,7 @@ class PluginUpdates {
 		/** Hook into WordPress plugin update system */
 		add_filter( 'plugins_api', array( $this, 'set_remote_data' ), 99, 3 );
 
-		/** Check for updates using the Update URI */
+		/** Check for updates through the filter named after the plugin's Update URI hostname */
 		add_filter( 'update_plugins_' . $this->config['update_uri'], array( $this, 'check_update' ), 99, 4 );
 
 		/** Clear cache when license data or key changes */
@@ -94,7 +94,7 @@ class PluginUpdates {
 	 * @return object The modified update object
 	 */
 	public function check_update( $update, $plugin_data, $plugin_file, $locales ) {
-		/** Only process for our plugin */
+		/** Only process for our plugin, and keep an update another callback already supplied */
 		if ( $plugin_file !== $this->plugin_id || ! empty( $update ) ) {
 			return $update;
 		}

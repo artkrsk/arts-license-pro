@@ -8,7 +8,7 @@ import { shouldCreateDistFolder } from '../common/paths.js'
 /**
  * Create a ZIP archive of the WordPress plugin
  * @param {Object} config - Project configuration
- * @returns {Promise<void>}
+ * @returns {Promise<string|undefined>} Path of the created ZIP; undefined when packaging is skipped
  */
 export async function createZipArchive(config) {
   if (!isFeatureEnabled(config, 'wordpressPlugin')) {
@@ -42,7 +42,7 @@ export async function createZipArchive(config) {
     // Set up pipeline
     archive.pipe(output)
 
-    // Add files from the plugin directory to the archive root
+    // Add the plugin directory to the archive under a top-level folder named after the package
     archive.directory(pluginDir, config.wordpressPlugin.packageName, (entry) => {
       // Skip hidden files and directories (like .DS_Store)
       if (entry.name.split('/').some((part) => part.startsWith('.'))) {

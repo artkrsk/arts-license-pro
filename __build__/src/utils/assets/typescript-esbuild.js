@@ -30,7 +30,7 @@ export async function compileTypeScript(config) {
   // Get TypeScript config or use defaults
   const tsConfig = config.ts || {}
 
-  // In development, always include ESM format for code splitting
+  // ESM (code splitting) is always built in development and whenever no dist folder is created
   const formats = isDev
     ? [getConfigValue(config, 'ts.devFormat', 'iife'), 'esm']
     : shouldCreateDist
@@ -40,7 +40,6 @@ export async function compileTypeScript(config) {
   try {
     const packageMetadata = await getPackageMetadata(config)
 
-    // Process each format
     for (const format of formats) {
       logger.debug(`⚙️ Building TypeScript to ${format} format...`)
 
@@ -119,7 +118,7 @@ export async function compileTypeScript(config) {
         delete buildConfig.banner
       }
 
-      // Add TypeScript specific options
+      // Pass tsconfig only when the file exists
       if (await fs.pathExists(tsconfigFullPath)) {
         buildConfig.tsconfig = tsconfigFullPath
       }
@@ -170,7 +169,7 @@ export async function compileTypeScript(config) {
           logger.debug('📝 Added banner to index.mjs')
         }
 
-        // Copy ESM files to dist if needed
+        // Copy ESM files to the library directory when a dist folder is created
         if (shouldCreateDist) {
           await copyEsmToLibrary(config, isDev)
         }
@@ -218,10 +217,8 @@ async function copyUmdToLibrary(outputFile, config, isDev) {
     return
   }
 
-  // Get library directory
   const libraryDir = getLibraryDir(config, isDev)
 
-  // Ensure dir exists
   await fs.ensureDir(libraryDir)
 
   logger.debug(`📂 Copying TypeScript UMD build to library: ${libraryDir}`)
@@ -294,7 +291,7 @@ async function copyEsmToLibrary(config, isDev) {
  * Watch TypeScript files for changes
  * @param {Object} config - Project configuration
  * @param {Object} liveReloadServer - Live reload server instance
- * @returns {Object} - Watcher instance
+ * @returns {Promise<Object>} - Watcher instance
  */
 export async function watchTypeScript(config, liveReloadServer) {
   // Determine TypeScript directory from config
@@ -302,10 +299,10 @@ export async function watchTypeScript(config, liveReloadServer) {
 
   logger.info(`👀 Watching TypeScript files in ${path.relative(process.cwd(), tsDir)}`)
 
-  // Get file extensions to watch from config or use defaults
+  // Only feeds extensionPattern below
   const extensions = getConfigValue(config, 'ts.watchExtensions', ['.ts', '.tsx'])
 
-  // Create pattern for watching specific extensions
+  // Glob for the watched extensions; currently unused, chokidar watches the whole directory
   const extensionPattern =
     extensions.length > 1 ? `**/*{${extensions.join(',')}}` : `**/*${extensions[0]}`
 
@@ -345,7 +342,6 @@ export async function watchTypeScript(config, liveReloadServer) {
   const additionalOptions = getConfigValue(config, 'ts.watcherOptions', {})
   Object.assign(watcherOptions, additionalOptions)
 
-  // Create the watcher
   const watcher = chokidar.watch(tsDir, watcherOptions)
 
   watcher.on('change', debouncedBuild)

@@ -108,7 +108,7 @@ export function shouldCreateDistFolder(config) {
  * Get the WordPress plugin destination path based on environment
  * @param {Object} config - Project configuration
  * @param {boolean} [isDev=null] - Whether this is a development build (auto-detected if null)
- * @returns {string} Plugin destination path
+ * @returns {string|null} Plugin destination path, or null when there is none for this mode
  */
 export function getPluginDestPath(config, isDev = null) {
   // If isDev is not provided, detect from config
@@ -133,7 +133,7 @@ export function getPluginDestPath(config, isDev = null) {
  * Get output file path for a specific format
  * @param {Object} config - Project configuration
  * @param {string} format - Build format ('cjs', 'iife', etc.)
- * @returns {string} The path to the output file
+ * @returns {string|null} The path to the output file, or null when no dist output applies
  */
 export function getOutputFilePath(config, format) {
   // Skip if createDistFolder is explicitly disabled and we're not in dev mode

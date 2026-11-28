@@ -15,11 +15,9 @@ export const ProBadge = ({
 }: IProBadgeProps): JSX.Element => {
   const badgeText = text || __('Get Pro', 'arts-license-pro')
 
-  /** Determine CSS class based on status */
   const statusClass = status !== 'default' ? ` arts-license-pro-badge_${status}` : ''
   const badgeClassName = `arts-license-pro-badge${statusClass}`
 
-  // Only render as link if renderAsLink is true AND href is provided
   const shouldRenderAsLink = renderAsLink && href
   
   const badge = shouldRenderAsLink ? (

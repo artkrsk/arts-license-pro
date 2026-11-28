@@ -16,7 +16,7 @@ use Arts\LicensePro\Includes\AJAX;
  * Plugin
  *
  * Main entry point for Arts License Pro library.
- * Provides license management and plugin update functionality.
+ * Provides license management and plugin or theme update functionality.
  */
 class Plugin {
 
@@ -105,16 +105,14 @@ class Plugin {
 			return;
 		}
 
-		/** Initialize license manager */
 		$this->manager = new Manager( $this->config );
 
-		/** Check for manager initialization errors */
 		if ( $this->manager->get_errors() ) {
 			$this->init_error = $this->manager->get_errors();
 			return;
 		}
 
-		/** Initialize updates manager if plugin_file or theme_slug provided */
+		/** Plugin and theme updates are mutually exclusive: plugin_file wins over theme_slug */
 		if ( ! empty( $this->config['plugin_file'] ) ) {
 			$this->updates = new PluginUpdates( $this->config, $this->manager );
 			$this->updates->init();
@@ -123,11 +121,9 @@ class Plugin {
 			$this->updates->init();
 		}
 
-		/** Initialize frontend manager */
 		$this->frontend = new Frontend( $this->config, $this->manager );
 		$this->frontend->init();
 
-		/** Initialize AJAX manager */
 		$this->ajax = new AJAX( $this->config, $this->manager );
 		$this->ajax->init();
 	}
@@ -156,7 +152,6 @@ class Plugin {
 		$root_id = $this->config['product_slug'] . '-license-panel';
 		$classes = array( 'arts-license-pro-license-panel-root' );
 
-		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
 			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
 			$classes        = array_merge( $classes, $custom_classes );
@@ -188,7 +183,6 @@ class Plugin {
 		$badge_id             = $this->config['product_slug'] . '-pro-badge-' . ( ++$badge_counter );
 		$classes              = array( 'arts-license-pro-badge-root' );
 
-		// Add custom classes if provided
 		if ( ! empty( $args['class'] ) ) {
 			$custom_classes = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
 			$classes        = array_merge( $classes, $custom_classes );

@@ -90,7 +90,7 @@ class Manager implements ManagerInterface {
 			return false;
 		}
 
-		/** Check status field */
+		/** status === 'valid' is the single source of truth for validity */
 		if ( ! isset( $data['status'] ) || $data['status'] !== 'valid' ) {
 			return false;
 		}

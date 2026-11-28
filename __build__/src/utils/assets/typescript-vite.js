@@ -1,18 +1,14 @@
-import { build as viteBuild } from 'vite' // Use vite build
+import { build as viteBuild } from 'vite'
 import fs from 'fs-extra'
 import path from 'path'
 import chokidar from 'chokidar'
 import debounce from 'debounce'
 import { logger } from '../../logger/index.js'
-import { generateBanner } from '../common/banner.js' // Keep banner generation
+import { generateBanner } from '../common/banner.js'
 import { getPackageMetadata } from '../common/version.js'
 import {
   getLibraryDir,
-  // getOutputFilePath, // No longer needed for specific formats
-  // getDirectJsOutputPath, // We'll use getLibraryDir directly
-  // getDirectEsmOutputPath, // No longer needed
-  // getDirectChunksOutputDir, // No longer needed
-  shouldCreateDistFolder // Keep this logic if relevant elsewhere, but Vite handles output dir
+  shouldCreateDistFolder
 } from '../common/paths.js'
 import { isDevelopment, getConfigValue } from '../../config/index.js'
 
@@ -79,7 +75,7 @@ export async function compileTypeScript(config) {
               }
               return 'assets/[name]-[hash][extname]'
             },
-            banner: generateBanner(packageMetadata), // Add banner using Vite's option
+            banner: generateBanner(packageMetadata), // Add banner via Rollup's output.banner
             inlineDynamicImports: false
           }
         },
@@ -220,7 +216,6 @@ export async function watchTypeScript(config, liveReloadServer) {
         }
       } catch (error) {
         // Error is already logged in compileTypeScript/syncViteOutputToLibrary
-        // logger.error('❌ Failed to rebuild TypeScript files:', error)
       }
     },
     getConfigValue(config, 'ts.debounceTime', 300)
@@ -254,11 +249,6 @@ export async function watchTypeScript(config, liveReloadServer) {
 
   return watcher
 }
-
-// Remove unused functions related to esbuild/manual UMD wrapping/ESM handling
-// - wrapTsAsUmd
-// - copyUmdToLibrary
-// - copyEsmToLibrary
 
 export default {
   compileTypeScript,

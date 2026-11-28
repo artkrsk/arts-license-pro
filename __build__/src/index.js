@@ -3,7 +3,7 @@ import process from 'process'
 import { logger, LogLevel } from './logger/index.js'
 import { Builder } from './core/builder.js'
 
-// Set default log level based on environment or NODE_ENV
+// Log level comes from the LOG_LEVEL env var, defaulting to info
 const envLogLevel =
   process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'info')
 logger.level =
@@ -16,7 +16,6 @@ logger.level =
     trace: LogLevel.TRACE
   }[envLogLevel.toLowerCase()] || LogLevel.INFO
 
-// Create builder instance
 const builder = new Builder()
 
 // Main function to run the CLI

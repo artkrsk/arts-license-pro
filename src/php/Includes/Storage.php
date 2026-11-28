@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Storage
  *
  * Handles persistence of license data using wp_options.
- * Stores all license data in a single serialized option for performance.
+ * The license key and the rest of the license data live in two separate options.
  */
 class Storage implements StorageInterface {
 

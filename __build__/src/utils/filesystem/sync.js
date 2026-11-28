@@ -15,7 +15,6 @@ import { isFeatureEnabled, isDevelopment } from '../../config/index.js'
 export async function syncFiles(config, isDev = null) {
   logger.info('Syncing files to target directories...')
 
-  // If isDev is not provided, detect from config
   if (isDev === null) {
     isDev = isDevelopment(config)
   }
@@ -88,7 +87,6 @@ async function syncPhpFiles(config, isDev) {
     targets.push(path.join(config.paths.dist, `${config.wordpressPlugin.packageName}/src/php`))
   }
 
-  // Skip if no targets defined
   if (targets.length === 0) {
     logger.debug(`No PHP sync targets defined, skipping`)
     return
@@ -142,7 +140,6 @@ async function syncWordPressPluginFiles(config, isDev) {
   // Use variant-specific source if available, otherwise use default
   const source = config.wordpressPlugin?.source || config.paths.wordpress.plugin
 
-  // Skip if no source
   if (!(await fs.pathExists(source))) {
     logger.debug(`WordPress plugin source not found: ${source}, skipping sync`)
     return
@@ -204,10 +201,8 @@ async function syncVendorFiles(config, isDev) {
     logger.warn(`Vendor directory not found: ${source}, running composer install...`)
 
     try {
-      // Use the project root from config or fall back to current working directory
       const projectRoot = config._absoluteProjectRoot || process.cwd()
 
-      // Run composer install if composer.json exists
       if (await fs.pathExists(path.join(projectRoot, 'composer.json'))) {
         const { execSync } = await import('child_process')
         const cmd = 'composer install --no-dev --no-scripts --optimize-autoloader'
@@ -325,7 +320,6 @@ async function syncComposerFiles(config, isDev) {
   }
 
   const pluginDest = getPluginDestPath(config, isDev)
-  // Use the project root from config or fall back to current working directory
   const projectRoot = config._absoluteProjectRoot || process.cwd()
 
   logger.debug(`Syncing composer files to ${pluginDest}`)
@@ -333,7 +327,6 @@ async function syncComposerFiles(config, isDev) {
   for (const fileName of composerFiles) {
     const source = path.join(projectRoot, fileName)
 
-    // Skip if file doesn't exist
     if (!(await fs.pathExists(source))) {
       logger.debug(`Composer file not found: ${fileName}, skipping sync`)
       continue

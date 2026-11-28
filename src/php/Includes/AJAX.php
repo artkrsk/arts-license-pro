@@ -77,7 +77,6 @@ class AJAX {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ), $status );
 		}
 
-		/** Add license_key to response */
 		$result['license_key'] = $license_key;
 
 		wp_send_json_success( $result );

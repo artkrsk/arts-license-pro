@@ -12,7 +12,6 @@ export default defineConfig({
     // Setup files (equivalent to setupFilesAfterEnv in Jest)
     setupFiles: ['__tests__/ts/setup.ts'],
 
-    // Module resolution
     resolve: {
       alias: {
         '@interfaces': resolve(__dirname, 'src/ts/core/interfaces'),
@@ -21,7 +20,6 @@ export default defineConfig({
       }
     },
 
-    // Coverage configuration
     coverage: {
       include: ['src/ts/**/*.ts'],
       exclude: [

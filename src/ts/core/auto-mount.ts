@@ -6,7 +6,6 @@ const { createElement, render } = wp.element
 
 /** Auto-mount license panels and pro badges on page load */
 export function autoMountComponents(): void {
-  // Check if artsLicenseProInstances exists
   if (!window.artsLicenseProInstances) {
     return
   }

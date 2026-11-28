@@ -44,7 +44,6 @@ class Frontend {
 		$this->config  = $config;
 		$this->manager = $manager;
 
-		/** Set assets URL */
 		$this->assets_url = plugins_url( 'libraries/arts-license-pro/', dirname( __DIR__ ) . '/Plugin.php' );
 	}
 
@@ -75,7 +74,6 @@ class Frontend {
 
 		$enqueued = true;
 
-		/** Enqueue admin script */
 		wp_enqueue_script(
 			'arts-license-pro-admin',
 			$this->assets_url . 'index.umd.js',
@@ -91,7 +89,6 @@ class Frontend {
 			apply_filters( 'arts/license-pro/instances_data', array() )
 		);
 
-		/** Enqueue styles */
 		wp_enqueue_style(
 			'arts-license-pro-admin',
 			$this->assets_url . 'index.css',

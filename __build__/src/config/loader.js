@@ -30,7 +30,7 @@ export async function loadConfig(projectRoot, env = DEFAULT_ENV) {
       throw new Error(`Configuration file not found: ${configPath}`)
     }
 
-    // Use file:// URL format for dynamic imports to ensure they work with symlinks
+    // Dynamic imports take a file:// URL rather than a bare absolute path
     const configFileUrl = new URL(`file://${configPath}`).href
     const baseConfig = (await import(configFileUrl)).default
 
@@ -62,7 +62,6 @@ export async function loadConfig(projectRoot, env = DEFAULT_ENV) {
     // Apply environment config to base config
     const mergedConfig = envConfig(baseConfig)
 
-    // Set environment in config
     mergedConfig.currentEnvironment = env
 
     // Store the absolute project root in the config for reference

@@ -239,7 +239,6 @@ export function LicenseForm({
       }
     }
 
-    /** Render license info list */
     helpContent = (
       <div className="arts-license-pro-info">
         <ul className="arts-license-pro-info__list">{listItems}</ul>

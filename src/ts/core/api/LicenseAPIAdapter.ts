@@ -70,6 +70,7 @@ export class LicenseAPIAdapter implements ILicenseAPI {
     const result = (await response.json()) as IAjaxResponse
 
     if (!result.success) {
+      /** Must match the message AJAX.php sends for an empty check, which passes through __() */
       if (result.data?.message === 'No license found') {
         return null
       }

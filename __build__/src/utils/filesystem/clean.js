@@ -135,7 +135,7 @@ async function ensurePluginDirectories(config) {
     await fs.ensureDir(directLibraryPath)
   }
 
-  // Ensure chunks directory exists
+  // Chunks are written into the library directory itself, so this is the same path
   const chunksDir = getDirectChunksOutputDir(config)
   if (chunksDir) {
     await fs.ensureDir(chunksDir)

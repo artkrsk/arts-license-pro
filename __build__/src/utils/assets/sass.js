@@ -31,7 +31,7 @@ export async function compileSass(config) {
       `Environment: ${config.currentEnvironment}, isDev: ${isDev}, outputStyle: ${config.sass.options.outputStyle}`
     )
 
-    // Get file contents with banner
+    // Source map is generated only in development, unless sass.options.sourceMap is false
     const result = sassCompiler.compile(config.sass.entry, {
       ...config.sass.options,
       sourceMap: config.sass.options.sourceMap !== false ? isDev : false,
@@ -61,7 +61,6 @@ export async function compileSass(config) {
     if (shouldCreateDist) {
       logger.debug('📂 Also writing CSS to dist folder')
 
-      // Ensure the output directory exists
       const outputFile = config.sass.output
       await fs.ensureDir(path.dirname(outputFile))
       await fs.writeFile(outputFile, cssContent)
@@ -78,7 +77,7 @@ export async function compileSass(config) {
       await copyCssToLibrary(outputFile, cssContent, config, isDev, result.sourceMap)
     }
 
-    // Always copy to the production library directory if we're in production mode
+    // In production, also write to the production library dir unless the direct output path is already under dist
     if (!isDev && !directOutputPath.includes(config.paths.dist)) {
       const libraryDir = getLibraryDir(config, isDev)
       const targetFile = path.join(libraryDir, path.basename(config.sass.output))
@@ -114,10 +113,8 @@ async function copyCssToLibrary(outputFile, cssContent, config, isDev, sourceMap
     return
   }
 
-  // Ensure the directory exists
   await fs.ensureDir(libraryDir)
 
-  // Copy main CSS file
   await fs.writeFile(targetFile, cssContent)
 
   // Copy sourcemap if in development mode
@@ -135,7 +132,7 @@ async function copyCssToLibrary(outputFile, cssContent, config, isDev, sourceMap
  * Watch Sass files for changes
  * @param {Object} config - Project configuration
  * @param {Object} liveReloadServer - Live reload server instance
- * @returns {Object} - Watcher instance
+ * @returns {Promise<Object|null>} - Watcher instance, or null when Sass is disabled
  */
 export async function watchSass(config, liveReloadServer) {
   if (!isFeatureEnabled(config, 'sass')) {
@@ -165,7 +162,6 @@ export async function watchSass(config, liveReloadServer) {
     }
   }, 300)
 
-  // Setup watcher
   const watcher = chokidar.watch(sassDir, {
     ignored: config.watch.ignored || ['**/node_modules/**', '**/dist/**'],
     persistent: true,
